@@ -1,0 +1,26 @@
+{
+  "name": "jslinter",
+  "version": "0.0.0",
+  "description": "JSLint for Node.js",
+  "author": {
+    "name": "Nicola Squartini",
+    "email": "tensor5@gmail.com"
+  },
+  "license": "MIT",
+  "repository": "tensor5/JSLinter",
+  "keywords": [
+    "jslint",
+    "lint"
+  ],
+  "bin": {
+    "jslint": "jslint"
+  },
+  "devDependencies": {
+    "rollup": "^0.20.0"
+  },
+  "scripts": {
+    "build-bin": "node scripts/buildBin.js",
+    "build-lib": "node scripts/buildLib.js",
+    "test": "./jslint index.js scripts/*.js src/*.js"
+  }
+}
