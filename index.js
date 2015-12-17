@@ -1,5 +1,5 @@
 // jslint.js
-// 2015-12-02
+// 2015-12-05
 // Copyright (c) 2015 Douglas Crockford  (www.JSLint.com)
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3783,6 +3783,9 @@ module.exports = (function JSLint() {
     preaction('binary', 'in', function (thing) {
         warn('infix_in', thing);
     });
+    preaction('binary', 'instanceof', function (thing) {
+        warn('unexpected_a', thing);
+    });
     preaction('statement', '{', function (thing) {
         block_stack.push(blockage);
         blockage = thing;
@@ -4488,7 +4491,7 @@ module.exports = (function JSLint() {
             }
         }
         return {
-            edition: "2015-12-02",
+            edition: "2015-12-05",
             functions: functions,
             global: global,
             id: "(JSLint)",
