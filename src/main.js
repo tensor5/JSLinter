@@ -12,11 +12,7 @@ var cwd = process.cwd(),
 
 function printErrorAndExit(err) {
     'use strict';
-    if (err instanceof Error) {
-        console.error(err.name + ': ' + err.message);
-    } else {
-        console.error(err);
-    }
+    console.error(err.toString());
     process.exit(1);
 }
 
