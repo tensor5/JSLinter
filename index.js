@@ -1,5 +1,5 @@
 // jslint.js
-// 2015-12-05
+// 2015-12-16
 // Copyright (c) 2015 Douglas Crockford  (www.JSLint.com)
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -91,21 +91,22 @@
     bad_directive_a, bad_get, bad_module_name_a, bad_option_a, bad_property_a,
     bad_set, bitwise, block, body, browser, c, calls, catch, charAt,
     charCodeAt, closer, closure, code, column, concat, constant, context,
-    couch, create, d, dead, devel, directive, disrupt, dot, duplicate_a,
-    edition, ellipsis, else, empty_block, es6, eval, every, expected_a_at_b_c,
-    expected_a_b, expected_a_b_from_c_d, expected_a_before_b,
-    expected_digits_after_a, expected_four_digits, expected_identifier_a,
-    expected_line_break_a_b, expected_regexp_factor_a, expected_space_a_b,
-    expected_statements_a, expected_string_a, expected_type_string_a, exports,
-    expression, extra, flag, for, forEach, free, from, fud, fudge, function,
-    function_in_loop, functions, g, global, i, id, identifier, import, imports,
-    inc, indexOf, infix_in, init, initial, isArray, isNaN, join, json, keys,
-    label, label_a, lbp, led, length, level, line, lines, live, loop, m,
-    margin, match, maxerr, maxlen, message, misplaced_a, misplaced_directive_a,
-    module, naked_block, name, names, nested_comment, new, node, not_label_a,
-    nud, ok, open, option, out_of_scope_a, parameters, pop, property, push,
-    qmark, quote, redefinition_a_b, replace, reserved_a, role, search,
-    signature, slash_equal, slice, some, sort, split, statement, stop, strict,
+    couch, create, d, dead, devel, directive, directives, disrupt, dot,
+    duplicate_a, edition, ellipsis, else, empty_block, es6, eval, every,
+    expected_a_at_b_c, expected_a_b, expected_a_b_from_c_d,
+    expected_a_before_b, expected_digits_after_a, expected_four_digits,
+    expected_identifier_a, expected_line_break_a_b, expected_regexp_factor_a,
+    expected_space_a_b, expected_statements_a, expected_string_a,
+    expected_type_string_a, exports, expression, extra, flag, for, forEach,
+    free, from, fud, fudge, function, function_in_loop, functions, g, global,
+    i, id, identifier, import, imports, inc, indexOf, infix_in, init, initial,
+    isArray, isNaN, join, json, keys, label, label_a, lbp, led, length, level,
+    line, lines, live, loop, m, margin, match, maxerr, maxlen, message,
+    misplaced_a, misplaced_directive_a, module, naked_block, name, names,
+    nested_comment, new, node, not_label_a, nud, ok, open, option,
+    out_of_scope_a, parameters, pop, property, push, qmark, quote,
+    redefinition_a_b, replace, reserved_a, role, search, signature,
+    slash_equal, slice, some, sort, split, statement, stop, strict,
     subscript_a, switch, test, this, thru, toString, todo_comment, tokens,
     too_long, too_many, tree, type, u, unclosed_comment, unclosed_mega,
     unclosed_string, undeclared_a, unexpected_a, unexpected_a_after_b,
@@ -422,6 +423,7 @@ module.exports = (function JSLint() {
         blockage,           // The current block.
         block_stack,        // The stack of blocks.
         declared_globals,   // The object containing the global declarations.
+        directives,         // The directive comments.
         directive_mode,     // true if directives are still allowed.
         early_stop,         // true if JSLint cannot finish.
         export_mode,        // true if an export statement was seen.
@@ -810,7 +812,7 @@ module.exports = (function JSLint() {
             return the_token;
         }
 
-        function directive(the_comment, body) {
+        function parse_directive(the_comment, body) {
 
 // JSLint recognizes three directives that can be encoded in comments. This
 // function processes one item, and calls itself recursively to process the
@@ -868,7 +870,7 @@ module.exports = (function JSLint() {
                     module_mode = the_comment;
                     break;
                 }
-                return directive(the_comment, result[3]);
+                return parse_directive(the_comment, result[3]);
             }
             if (body) {
                 return stop('bad_directive_a', the_comment, body);
@@ -893,8 +895,9 @@ module.exports = (function JSLint() {
                     warn_at('misplaced_directive_a', line, from, result[1]);
                 } else {
                     the_comment.directive = result[1];
-                    directive(the_comment, result[2]);
+                    parse_directive(the_comment, result[2]);
                 }
+                directives.push(the_comment);
             }
             return the_comment;
         }
@@ -4404,6 +4407,7 @@ module.exports = (function JSLint() {
             block_stack = [];
             declared_globals = empty();
             directive_mode = true;
+            directives = [];
             early_stop = true;
             export_mode = false;
             fudge = (option.fudge)
@@ -4491,7 +4495,8 @@ module.exports = (function JSLint() {
             }
         }
         return {
-            edition: "2015-12-05",
+            directives: directives,
+            edition: "2015-12-16",
             functions: functions,
             global: global,
             id: "(JSLint)",
