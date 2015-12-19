@@ -1,7 +1,3 @@
-/*global
-    console, module, process
-*/
-
 function printDone(a) {
     'use strict';
     console.log('done.');

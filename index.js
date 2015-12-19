@@ -82,8 +82,8 @@
 
 // WARNING: JSLint will hurt your feelings.
 
-/*global
-    module
+/*jslint
+    node
 */
 
 /*property

@@ -1,7 +1,3 @@
-/*global
-    console, process, Promise, require
-*/
-
 var fs = require('fs'),
     inFile = 'src/JSLint/jslint.js',
     outFile = 'index.js',
@@ -51,10 +47,10 @@ function patchModuleExports(str) {
     return str.replace('var jslint = ', 'module.exports = ');
 }
 
-function patchGlobal(str) {
+function patchNode(str) {
     'use strict';
     return str.replace('\n/*property\n',
-            '\n/*global\n    module\n*/\n\n/*property\n');
+            '\n/*jslint\n    node\n*/\n\n/*property\n');
 }
 
 function propertyDirective(data) {
@@ -117,7 +113,7 @@ process.stdout.write('Generating \'' + outFile +
 
 readFilePromise(inFile, 'utf8')
     .then(patchModuleExports)
-    .then(patchGlobal)
+    .then(patchNode)
     .then(writeFilePromise.bind(undefined, outFile))
     .then(function () {
         'use strict';

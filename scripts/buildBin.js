@@ -1,7 +1,3 @@
-/*global
-    console, process, Promise, require
-*/
-
 var myPlugin = {
         resolveId: function resolveId(moduleName) {
             'use strict';
