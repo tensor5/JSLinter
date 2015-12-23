@@ -1,5 +1,7 @@
 # **JSLinter** - JSLint for Node.js
 
+[![npm version](https://img.shields.io/npm/v/jslinter.svg)][npm]
+
 -   [Introduction](#introduction)
 -   [Why another JSLint package for Node.js](#why-another-jslint-package-for-node-js)
 -   [JavaScript API](#javascript-api)
@@ -130,4 +132,5 @@ section, and they must have the correct value type, e.g.:
 [jslint-func]: http://www.jslint.com/function.html "The jslint Function"
 [jslint-help]: http://www.jslint.com/help.html "Help"
 [jslint-repo]: https://github.com/douglascrockford/JSLint "douglascrockford/JSLint"
+[npm]: https://www.npmjs.com/package/jslinter "JSLinter page on npmjs.com"
 [nodejs]: https://nodejs.org/ "Node.js"
