@@ -1,4 +1,4 @@
-# **JSLinter** - JSLint for Node.js
+# JSLinter - JSLint for Node.js
 
 [![npm version](https://img.shields.io/npm/v/jslinter.svg)][npm]
 
