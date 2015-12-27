@@ -1,5 +1,5 @@
 // jslint.js
-// 2015-12-22
+// 2015-12-26
 // Copyright (c) 2015 Douglas Crockford  (www.JSLint.com)
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -2302,7 +2302,9 @@ module.exports = (function JSLint() {
     constant('(regexp)', 'regexp');
     constant('(string)', 'string');
     constant('arguments', 'object', function () {
-        warn('unexpected_a', token);
+        if (option.es6) {
+            warn('unexpected_a', token);
+        }
         return token;
     });
     constant('eval', 'function', function () {
@@ -4509,7 +4511,7 @@ module.exports = (function JSLint() {
         }
         return {
             directives: directives,
-            edition: "2015-12-22",
+            edition: "2015-12-26",
             functions: functions,
             global: global,
             id: "(JSLint)",
