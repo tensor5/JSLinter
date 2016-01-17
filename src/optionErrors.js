@@ -13,8 +13,14 @@ function notNum(key) {
     throw new Error('\'' + key + '\' must have a numeric value.');
 }
 
+function unexpectedValue(key) {
+    'use strict';
+    throw new Error('\'' + key + '\' does not expect a value.');
+}
+
 export default {
     notBool: notBool,
     notKnown: notKnown,
-    notNum: notNum
+    notNum: notNum,
+    unexpectedValue: unexpectedValue
 };

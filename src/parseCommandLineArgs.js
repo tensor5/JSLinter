@@ -52,6 +52,12 @@ function parseCommandLineArgs(argv) {
                     }
                     conf.options[key] = num;
                     return conf;
+                case 'raw':
+                    if (value !== undefined) {
+                        optErr.unexpectedValue(key);
+                    }
+                    conf.flags[key] = true;
+                    return conf;
                 default:
                     optErr.notKnown(key);
                 }
@@ -62,6 +68,9 @@ function parseCommandLineArgs(argv) {
         return conf;
     }, {
         filePaths: [],
+        flags: {
+            raw: false
+        },
         options: {}
     });
 }

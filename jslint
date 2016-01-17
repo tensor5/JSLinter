@@ -19,10 +19,16 @@ function notNum(key) {
     throw new Error('\'' + key + '\' must have a numeric value.');
 }
 
+function unexpectedValue(key) {
+    'use strict';
+    throw new Error('\'' + key + '\' does not expect a value.');
+}
+
 var optErr = {
     notBool: notBool,
     notKnown: notKnown,
-    notNum: notNum
+    notNum: notNum,
+    unexpectedValue: unexpectedValue
 };
 
 function parseCommandLineArgs(argv) {
@@ -77,6 +83,12 @@ function parseCommandLineArgs(argv) {
                     }
                     conf.options[key] = num;
                     return conf;
+                case 'raw':
+                    if (value !== undefined) {
+                        optErr.unexpectedValue(key);
+                    }
+                    conf.flags[key] = true;
+                    return conf;
                 default:
                     optErr.notKnown(key);
                 }
@@ -87,6 +99,9 @@ function parseCommandLineArgs(argv) {
         return conf;
     }, {
         filePaths: [],
+        flags: {
+            raw: false
+        },
         options: {}
     });
 }
@@ -306,6 +321,7 @@ function displayErrors(path, data) {
 }
 
 var cwd = process.cwd();
+var flags;
 var filePaths;
 var homeDir;
 var cmdLineOpts;
@@ -324,6 +340,7 @@ try {
 
 filePaths = parsedArgs.filePaths;
 cmdLineOpts = parsedArgs.options;
+flags = parsedArgs.flags;
 
 if (process.platform !== 'win32') {
     homeDir = process.env.HOME;
@@ -335,14 +352,24 @@ if (filePaths.length === 0) {
     printErrorAndExit('No files specified.');
 }
 
-function lintFile(homeConf, file) {
+function lintFile(homeConf, file, prevReport) {
     'use strict';
     return P.readFile(file, 'utf8')
         .then(function (data) {
             return P.readConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
-                    var newConf = extend(conf, cmdLineOpts);
-                    displayErrors(file, Node.jslint(data, newConf));
+                    var newConf = extend(conf, cmdLineOpts),
+                        report = Node.jslint(data, newConf);
+
+                    if (flags.raw) {
+                        return prevReport.concat({
+                            file: file,
+                            option: report.option,
+                            stop: report.stop,
+                            warnings: report.warnings
+                        });
+                    }
+                    displayErrors(file, report);
                 });
         });
 }
@@ -350,8 +377,14 @@ function lintFile(homeConf, file) {
 P.readConf(homeDir, {})
     .then(function (conf) {
         'use strict';
-        return filePaths.reduce(function (prom, file) {
+        var promise = filePaths.reduce(function (prom, file) {
             return prom.then(lintFile.bind(undefined, conf, file));
-        }, Promise.resolve());
+        }, Promise.resolve([]));
+        if (flags.raw) {
+            return promise.then(function (out) {
+                process.stdout.write(JSON.stringify(out));
+            });
+        }
+        return promise;
     })
     .catch(printErrorAndExit);

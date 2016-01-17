@@ -69,11 +69,11 @@ described in details [here][jslint-func].
 ## Command-line
 
 To use **JSLinter** from a terminal, simply run the `jslint` command passing the
-list of files you want to check, and the standard [JSLint][jslint] options
-described [here][jslint-help]:
+list of files you want to check, the standard [JSLint][jslint] options
+described [here][jslint-help], and the command-line specific flags:
 
 ```shell
-jslint [OPTIONS] file1.js [file2.js [...]]
+jslint [FLAGS or OPTIONS] file1.js [file2.js [...]]
 ```
 
 Additionally `jslint` reads options from JSON configuration files named
@@ -127,6 +127,17 @@ section, and they must have the correct value type, e.g.:
     "node": true
 }
 ```
+
+`jslint` also recognize some command-line specific flags:
+
+-   `--raw`: output the report as raw JSON, useful when the output is expected
+    to be parsed by another tool. The format is an array of objects, one for
+    each input file, containing the following fields:
+
+    -   `file`: the name of the input file
+    -   `option`: JSLint option object
+    -   `stop`: true if JSLint was not able to process the entire file
+    -   `warnings`: the array of warning objects
 
 [jslint]: http://www.jslint.com/ "The JavaScript Code Quality Tool"
 [jslint-func]: http://www.jslint.com/function.html "The jslint Function"
