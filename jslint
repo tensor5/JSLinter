@@ -84,6 +84,7 @@ function parseCommandLineArgs(argv) {
                     conf.options[key] = num;
                     return conf;
                 case 'raw':
+                case 'sha-bang':
                     if (value !== undefined) {
                         optErr.unexpectedValue(key);
                     }
@@ -100,7 +101,8 @@ function parseCommandLineArgs(argv) {
     }, {
         filePaths: [],
         flags: {
-            raw: false
+            raw: false,
+            'sha-bang': false
         },
         options: {}
     });
@@ -352,6 +354,14 @@ if (filePaths.length === 0) {
     printErrorAndExit('No files specified.');
 }
 
+function removeShaBang(str, shaBang) {
+    'use strict';
+    if (shaBang) {
+        return str.replace(/^#!.*(\n|\r\n?)/, '');
+    }
+    return str;
+}
+
 function lintFile(homeConf, file, prevReport) {
     'use strict';
     return P.readFile(file, 'utf8')
@@ -359,7 +369,9 @@ function lintFile(homeConf, file, prevReport) {
             return P.readConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
                     var newConf = extend(conf, cmdLineOpts),
-                        report = Node.jslint(data, newConf);
+                        report = Node
+                            .jslint(removeShaBang(data, flags['sha-bang']),
+                                    newConf);
 
                     if (flags.raw) {
                         return prevReport.concat({

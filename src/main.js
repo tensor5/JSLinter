@@ -37,6 +37,14 @@ if (filePaths.length === 0) {
     printErrorAndExit('No files specified.');
 }
 
+function removeShaBang(str, shaBang) {
+    'use strict';
+    if (shaBang) {
+        return str.replace(/^#!.*(\n|\r\n?)/, '');
+    }
+    return str;
+}
+
 function lintFile(homeConf, file, prevReport) {
     'use strict';
     return P.readFile(file, 'utf8')
@@ -44,7 +52,9 @@ function lintFile(homeConf, file, prevReport) {
             return P.readConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
                     var newConf = extend(conf, cmdLineOpts),
-                        report = Node.jslint(data, newConf);
+                        report = Node
+                            .jslint(removeShaBang(data, flags['sha-bang']),
+                                    newConf);
 
                     if (flags.raw) {
                         return prevReport.concat({

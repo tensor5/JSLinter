@@ -53,6 +53,7 @@ function parseCommandLineArgs(argv) {
                     conf.options[key] = num;
                     return conf;
                 case 'raw':
+                case 'sha-bang':
                     if (value !== undefined) {
                         optErr.unexpectedValue(key);
                     }
@@ -69,7 +70,8 @@ function parseCommandLineArgs(argv) {
     }, {
         filePaths: [],
         flags: {
-            raw: false
+            raw: false,
+            'sha-bang': false
         },
         options: {}
     });

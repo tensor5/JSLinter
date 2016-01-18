@@ -139,6 +139,8 @@ section, and they must have the correct value type, e.g.:
     -   `stop`: true if JSLint was not able to process the entire file
     -   `warnings`: the array of warning objects
 
+-   `--sha-bang`: ignore the first line of input if it begins with `#!`.
+
 [jslint]: http://www.jslint.com/ "The JavaScript Code Quality Tool"
 [jslint-func]: http://www.jslint.com/function.html "The jslint Function"
 [jslint-help]: http://www.jslint.com/help.html "Help"
