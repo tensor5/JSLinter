@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-/*global
-    console, process, Promise, require
+/*jslint
+    es6, node
 */
 
 function highlight(str) {
