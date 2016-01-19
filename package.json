@@ -1,6 +1,6 @@
 {
   "name": "jslinter",
-  "version": "0.1.20160113",
+  "version": "0.2.20160114",
   "description": "JSLint for Node.js",
   "author": {
     "name": "Nicola Squartini",
