@@ -2,12 +2,12 @@ import optErr from 'optionErrors';
 
 function parseCommandLineArgs(argv) {
     'use strict';
-    var key,
-        match,
-        notStop = true,
-        num,
-        optRegEx = /^--([^\s=]+)(?:=(\S*))?$/,
-        value;
+    var key;
+    var match;
+    var notStop = true;
+    var num;
+    var optRegEx = /^--([^\s=]+)(?:=(\S*))?$/;
+    var value;
 
     return argv.reduce(function (conf, arg) {
         if (notStop) {

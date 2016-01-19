@@ -4,12 +4,12 @@ import parseCommandLineArgs from 'parseCommandLineArgs';
 import P from 'promises';
 import Node from 'requires';
 
-var cwd = process.cwd(),
-    flags,
-    filePaths,
-    homeDir,
-    cmdLineOpts,
-    parsedArgs;
+var cwd = process.cwd();
+var flags;
+var filePaths;
+var homeDir;
+var cmdLineOpts;
+var parsedArgs;
 
 function printErrorAndExit(err) {
     'use strict';
@@ -51,10 +51,10 @@ function lintFile(homeConf, file, prevReport) {
         .then(function (data) {
             return P.readConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
-                    var newConf = extend(conf, cmdLineOpts),
-                        report = Node
-                            .jslint(removeShaBang(data, flags['sha-bang']),
-                                    newConf);
+                    var newConf = extend(conf, cmdLineOpts);
+                    var report = Node
+                        .jslint(removeShaBang(data, flags['sha-bang']),
+                                newConf);
 
                     if (flags.raw) {
                         return prevReport.concat({

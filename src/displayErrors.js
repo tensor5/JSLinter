@@ -5,12 +5,12 @@ function highlight(str) {
 
 function highlightCol(str, i) {
     'use strict';
-    var c = str.charAt(i),
-        code = str.charCodeAt(i),
-        codeOther,
-        before,
-        middle,
-        after;
+    var c = str.charAt(i);
+    var code = str.charCodeAt(i);
+    var codeOther;
+    var before;
+    var middle;
+    var after;
 
     // Handle non-BMP characters
     if (code >= 0xD800 && code <= 0xDBFF) {
@@ -36,9 +36,9 @@ function highlightCol(str, i) {
 function paddedNumber(totalSpace, number) {
     'use strict';
 
-    var digitString = number.toString(),
-        padding = totalSpace - digitString.length,
-        space = ' ';
+    var digitString = number.toString();
+    var padding = totalSpace - digitString.length;
+    var space = ' ';
 
     if (padding >= 0) {
         return space.repeat(padding) + digitString;
@@ -50,15 +50,15 @@ function paddedNumber(totalSpace, number) {
 function displayErrors(path, data) {
     'use strict';
 
-    var fudge = +!!data.option.fudge,
-        maxLine,
-        maxLineDigits,
-        maxerr = data.option.maxerr,
-        numberOfWarnings = data.warnings.length,
-        tooMany = numberOfWarnings >= maxerr,
-        tooManyNumber = numberOfWarnings - tooMany,
-        tooManyNumberDigits = tooManyNumber.toString().length,
-        unable = 'JSLint was unable to finish.';
+    var fudge = +!!data.option.fudge;
+    var maxLine;
+    var maxLineDigits;
+    var maxerr = data.option.maxerr;
+    var numberOfWarnings = data.warnings.length;
+    var tooMany = numberOfWarnings >= maxerr;
+    var tooManyNumber = numberOfWarnings - tooMany;
+    var tooManyNumberDigits = tooManyNumber.toString().length;
+    var unable = 'JSLint was unable to finish.';
 
     if (numberOfWarnings !== 0) {
         console.log('\n%s', path);
@@ -66,12 +66,12 @@ function displayErrors(path, data) {
         maxLineDigits = maxLine.toString().length;
     }
     data.warnings.forEach(function (warning, i) {
-        var message = warning.message,
-            messageCol,
-            messageColHi,
-            messageLine,
-            messageLineHi,
-            messageNum;
+        var message = warning.message;
+        var messageCol;
+        var messageColHi;
+        var messageLine;
+        var messageLineHi;
+        var messageNum;
 
         if (i === maxerr && data.stop) {
             console.log(' ', message, unable);

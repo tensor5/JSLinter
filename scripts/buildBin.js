@@ -1,13 +1,13 @@
 var myPlugin = {
-        resolveId: function resolveId(moduleName) {
-            'use strict';
-            return 'src/' + moduleName + '.js';
-        }
-    },
-    output = 'jslint',
-    utils = require('./utils'),
-    printDone = utils.printDone,
-    printErrorAndExit = utils.printErrorAndExit;
+    resolveId: function resolveId(moduleName) {
+        'use strict';
+        return 'src/' + moduleName + '.js';
+    }
+};
+var output = 'jslint';
+var utils = require('./utils');
+var printDone = utils.printDone;
+var printErrorAndExit = utils.printErrorAndExit;
 
 function chmodPromise(path, mode) {
     'use strict';

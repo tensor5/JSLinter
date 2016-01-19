@@ -1,8 +1,8 @@
-var inFile = 'src/JSLint/jslint.js',
-    outFile = 'index.js',
-    utils = require('./utils'),
-    printDone = utils.printDone,
-    printErrorAndExit = utils.printErrorAndExit;
+var inFile = 'src/JSLint/jslint.js';
+var outFile = 'index.js';
+var utils = require('./utils');
+var printDone = utils.printDone;
+var printErrorAndExit = utils.printErrorAndExit;
 
 function requireJSLintPromise(filename) {
     'use strict';
@@ -29,11 +29,11 @@ function patchNode(str) {
 function propertyDirective(data) {
     'use strict';
 
-    var lineLength = 4,
-        maxLen = 79, // yield output similar to original
-        directive = ['/*property\n    '],
-        properties = Object.keys(data.property).sort(),
-        last = properties.length - 1;
+    var lineLength = 4;
+    var maxLen = 79; // yield output similar to original
+    var directive = ['/*property\n    '];
+    var properties = Object.keys(data.property).sort();
+    var last = properties.length - 1;
 
     if (properties.length > 0) {
         properties.forEach(function (key, i) {

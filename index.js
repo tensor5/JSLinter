@@ -1,5 +1,5 @@
 // jslint.js
-// 2016-01-13
+// 2016-01-14
 // Copyright (c) 2015 Douglas Crockford  (www.JSLint.com)
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -102,10 +102,10 @@
     i, id, identifier, import, imports, inc, indexOf, infix_in, init, initial,
     isArray, isNaN, join, json, keys, label, label_a, lbp, led, length, level,
     line, lines, live, loop, m, margin, match, maxerr, maxlen, message,
-    misplaced_a, misplaced_directive_a, missing_browser, module, naked_block,
-    name, names, nested_comment, new, node, not_label_a, nud, ok, open, option,
-    out_of_scope_a, parameters, pop, property, push, qmark, quote,
-    redefinition_a_b, replace, reserved_a, role, search, signature,
+    misplaced_a, misplaced_directive_a, missing_browser, module, multivar,
+    naked_block, name, names, nested_comment, new, node, not_label_a, nud, ok,
+    open, option, out_of_scope_a, parameters, pop, property, push, qmark,
+    quote, redefinition_a_b, replace, reserved_a, role, search, signature,
     slash_equal, slice, some, sort, split, statement, stop, strict,
     subscript_a, switch, test, this, thru, toString, todo_comment, tokens,
     too_long, too_many, tree, type, u, unclosed_comment, unclosed_mega,
@@ -175,6 +175,7 @@ module.exports = (function JSLint() {
         fudge: true,
         maxerr: 10000,
         maxlen: 10000,
+        multivar: true,
         node: [
             'Buffer', 'clearImmediate', 'clearInterval', 'clearTimeout',
             'console', 'exports', 'global', 'module', 'process', 'querystring',
@@ -509,9 +510,10 @@ module.exports = (function JSLint() {
         }
         warning.message = supplant(bundle[code] || code, warning);
         warnings.push(warning);
-        return (typeof option.maxerr === 'number' &&
-                warnings.length === option.maxerr)
-            ? stop_at('too_many', line, column)
+        return (
+            typeof option.maxerr === 'number' &&
+            warnings.length === option.maxerr
+        )   ? stop_at('too_many', line, column)
             : warning;
     }
 
@@ -822,9 +824,9 @@ module.exports = (function JSLint() {
 
             var result = body.match(rx_directive_part);
             if (result) {
-                var allowed,
-                    name = result[1],
-                    value = result[2];
+                var allowed;
+                var name = result[1];
+                var value = result[2];
                 switch (the_comment.directive) {
                 case 'jslint':
                     allowed = allowed_option[name];
@@ -3119,6 +3121,9 @@ module.exports = (function JSLint() {
                 return stop('expected_identifier_a', next_token);
             }
             if (next_token.id === ',') {
+                if (!option.multivar) {
+                    warn('expected_a_b', next_token, ';', ',');
+                }
                 advance(',');
                 return next();
             }
@@ -4515,7 +4520,7 @@ module.exports = (function JSLint() {
         }
         return {
             directives: directives,
-            edition: "2016-01-13",
+            edition: "2016-01-14",
             functions: functions,
             global: global,
             id: "(JSLint)",
