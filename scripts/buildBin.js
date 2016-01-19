@@ -39,7 +39,7 @@ require('rollup')
             banner: '#!/usr/bin/env node\n\n' + jslint,
             format: 'cjs',
             useStrict: false
-        }).code;
+        }).code + '\n';
     })
     .then(utils.writeFile.bind(undefined, output))
     .then(printDone)
