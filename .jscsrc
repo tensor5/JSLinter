@@ -1,4 +1,5 @@
 {
-	"preset": "crockford",
-	"requireVarDeclFirst": false
+    "preset": "crockford",
+    "requireMultipleVarDecl": false,
+    "requireVarDeclFirst": false
 }
