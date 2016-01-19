@@ -4540,5 +4540,3 @@ module.exports = (function JSLint() {
         };
     };
 }());
-
-/*node module.exports = jslint;*/
