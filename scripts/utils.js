@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 function printDone(a) {
     'use strict';
     console.log('done.');
@@ -10,7 +12,35 @@ function printErrorAndExit(err) {
     process.exit(1);
 }
 
+function readFile(filename, options) {
+    'use strict';
+    return new Promise(function (resolve, reject) {
+        fs.readFile(filename, options, function (err, data) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
+}
+
+function writeFile(filename, data, options) {
+    'use strict';
+    return new Promise(function (resolve, reject) {
+        fs.writeFile(filename, data, options, function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
 module.exports = {
     printDone: printDone,
-    printErrorAndExit: printErrorAndExit
+    printErrorAndExit: printErrorAndExit,
+    readFile: readFile,
+    writeFile: writeFile
 };

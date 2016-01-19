@@ -1,35 +1,8 @@
-var fs = require('fs'),
-    inFile = 'src/JSLint/jslint.js',
+var inFile = 'src/JSLint/jslint.js',
     outFile = 'index.js',
     utils = require('./utils'),
     printDone = utils.printDone,
     printErrorAndExit = utils.printErrorAndExit;
-
-function readFilePromise(filename, options) {
-    'use strict';
-    return new Promise(function (resolve, reject) {
-        fs.readFile(filename, options, function (err, data) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(data);
-            }
-        });
-    });
-}
-
-function writeFilePromise(filename, data, options) {
-    'use strict';
-    return new Promise(function (resolve, reject) {
-        fs.writeFile(filename, data, options, function (err) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
-        });
-    });
-}
 
 function requireJSLintPromise(filename) {
     'use strict';
@@ -111,20 +84,20 @@ function diffPromise(file1, file2) {
 process.stdout.write('Generating \'' + outFile +
         '\' from original \'' + inFile + '\'... ');
 
-readFilePromise(inFile, 'utf8')
+utils.readFile(inFile, 'utf8')
     .then(patchModuleExports)
     .then(patchNode)
-    .then(writeFilePromise.bind(undefined, outFile))
+    .then(utils.writeFile.bind(undefined, outFile))
     .then(function () {
         'use strict';
         return Promise.all([
             requireJSLintPromise('../' + outFile),
-            readFilePromise(inFile, 'utf8'),
-            readFilePromise(outFile, 'utf8')
+            utils.readFile(inFile, 'utf8'),
+            utils.readFile(outFile, 'utf8')
         ]);
     })
     .then(patchProperty)
-    .then(writeFilePromise.bind(undefined, outFile))
+    .then(utils.writeFile.bind(undefined, outFile))
     .then(printDone)
     .then(function () {
         'use strict';

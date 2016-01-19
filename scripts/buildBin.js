@@ -35,13 +35,13 @@ require('rollup')
         var jslint = '/*jslint\n    es6, node\n*/\n';
 
         process.stdout.write('Writing bundle to \'' + output + '\'... ');
-        return bundle.write({
+        return bundle.generate({
             banner: '#!/usr/bin/env node\n\n' + jslint,
-            dest: output,
             format: 'cjs',
             useStrict: false
-        });
+        }).code;
     })
+    .then(utils.writeFile.bind(undefined, output))
     .then(printDone)
     .then(function chMod() {
         'use strict';
