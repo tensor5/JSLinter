@@ -1,5 +1,5 @@
 // jslint.js
-// 2016-01-14
+// 2016-01-27
 // Copyright (c) 2015 Douglas Crockford  (www.JSLint.com)
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3876,6 +3876,9 @@ module.exports = (function JSLint() {
         if (thing.wrapped) {
             warn('unexpected_parens', thing);
         }
+        if (typeof thing.name === 'object') {
+            thing.name.used = 0;
+        }
         return pop_block();
     }
 
@@ -4038,7 +4041,10 @@ module.exports = (function JSLint() {
             if (id !== 'ignore') {
                 var name = the_function.context[id];
                 if (name.function === the_function) {
-                    if (name.used === 0) {
+                    if (name.used === 0 && (
+                        name.role !== 'function' ||
+                        name.function.arity !== 'unary'
+                    )) {
                         warn('unused_a', name);
                     } else if (!name.init) {
                         warn('uninitialized_a', name);
@@ -4397,7 +4403,7 @@ module.exports = (function JSLint() {
                             (left.arity === 'statement' && right.id !== ';')
                         ) {
                             one_space();
-                        } else if (left.arity === 'unary') {
+                        } else if (left.arity === 'unary' && left.id !== '`') {
                             no_space_only();
                         }
                     }
@@ -4520,7 +4526,7 @@ module.exports = (function JSLint() {
         }
         return {
             directives: directives,
-            edition: "2016-01-14",
+            edition: "2016-01-27",
             functions: functions,
             global: global,
             id: "(JSLint)",
