@@ -32,11 +32,9 @@ require('rollup')
     .then(printDone)
     .then(function writeBundle(bundle) {
         'use strict';
-        var jslint = '/*jslint\n    es6, node\n*/\n';
-
         process.stdout.write('Writing bundle to \'' + output + '\'... ');
         return bundle.generate({
-            banner: '#!/usr/bin/env node\n\n' + jslint,
+            banner: '#!/usr/bin/env node\n\n/*jslint\n    es6, node\n*/\n',
             format: 'cjs',
             useStrict: false
         }).code + '\n';
