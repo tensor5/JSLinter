@@ -9,8 +9,12 @@
   "license": "MIT",
   "repository": "tensor5/JSLinter",
   "keywords": [
+    "code quality",
+    "ecmascript",
+    "javascript",
     "jslint",
-    "lint"
+    "lint",
+    "static analysis"
   ],
   "bin": {
     "jslint": "jslint"
