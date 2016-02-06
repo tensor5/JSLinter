@@ -273,17 +273,23 @@ function readFile(filename, options) {
     });
 }
 
-// Promise to read "dir/.jslintrc" and use it to update oldConf.
-function readConf(dir, oldConf) {
+// Promise to read "pathname" and use it to update oldConf.
+// If "pathname" is a directory, read "pathname/.jslintrc" instead.
+function readConf(pathname, oldConf) {
     'use strict';
-    return readFile(Node.path.join(dir, confFile), 'utf8')
-        .then(parseConfigurations.bind(undefined, oldConf), function (err) {
-            switch (err.code) {
-            case 'ENOENT':
-                return oldConf;
-            default:
-                throw err;
+    return readFile(pathname, 'utf8')
+        .catch(function (err) {
+            if (err.code === 'EISDIR') {
+                return readFile(Node.path.join(pathname, confFile), 'utf8');
             }
+            throw err;
+        })
+        .then(parseConfigurations.bind(undefined, oldConf))
+        .catch(function (err) {
+            if (err.code === 'ENOENT') {
+                return oldConf;
+            }
+            throw err;
         });
 }
 
