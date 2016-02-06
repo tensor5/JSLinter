@@ -1,5 +1,6 @@
 {
     "ecmaFeatures": {
+        "arrowFunctions": true,
         "modules": true
     },
     "env": {

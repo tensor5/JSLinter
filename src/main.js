@@ -49,7 +49,7 @@ function lintFile(homeConf, file, prevReport) {
     'use strict';
     return P.readFile(file, 'utf8')
         .then(function (data) {
-            return P.readConfs(cwd, Node.path.dirname(file), homeConf)
+            return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
                     var newConf = extend(conf, cmdLineOpts);
                     var report = Node

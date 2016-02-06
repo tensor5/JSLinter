@@ -36,8 +36,15 @@ function readConf(pathname, oldConf) {
         });
 }
 
+function readConfs(pathnames, oldConf) {
+    'use strict';
+    return pathnames
+        .reduce((prom, path) => prom.then(readConf.bind(undefined, path)),
+                Promise.resolve(oldConf));
+}
+
 // Promise to read configuration files from basePath to path.
-function readConfs(baseDir, dir, oldConf) {
+function readProjConfs(baseDir, dir, oldConf) {
     'use strict';
 
     var splitPath = Node.path.relative(baseDir, dir).split(Node.path.sep);
@@ -53,20 +60,14 @@ function readConfs(baseDir, dir, oldConf) {
     }
 
     // dir is in baseDir subtree.
-    return splitPath.reduce(function (prevObj, elem) {
-        var newAcc = Node.path.join(prevObj.acc, elem);
-        return {
-            prom: prevObj.prom.then(readConf.bind(undefined, newAcc)),
-            acc: newAcc
-        };
-    }, {
-        prom: readConf('.', oldConf),
-        acc: '.'
-    }).prom;
+    return readConfs(splitPath
+        .reduce((prev, elem, ix) => prev.concat(Node.path.join(prev[ix], elem)),
+                ['.']),
+            oldConf);
 }
 
 export default Object.freeze({
     readConf: readConf,
-    readConfs: readConfs,
+    readProjConfs: readProjConfs,
     readFile: readFile
 });
