@@ -27,6 +27,6 @@
     "build-lib": "node scripts/buildLib.js",
     "pull-jslint": "git submodule foreach git pull origin master",
     "sync": "npm run pull-jslint && npm run build-lib",
-    "test": "./jslint index.js scripts/*.js src/*.js"
+    "test": "./jslint index.js lib/*.js scripts/*.js src/*.js"
   }
 }

@@ -29,7 +29,7 @@ module, we believe that **JSLinter** has a number of advantages:
 ## JavaScript API
 
 ```javascript
-var jslint = require('jslinter');
+var jslint = require('jslinter').jslint;
 
 result = jslint(source, options, globals);
 ```

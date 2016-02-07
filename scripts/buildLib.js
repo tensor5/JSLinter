@@ -1,5 +1,5 @@
 var inFile = 'src/JSLint/jslint.js';
-var outFile = 'index.js';
+var outFile = 'lib/jslint.js';
 var utils = require('./utils');
 var printDone = utils.printDone;
 var printErrorAndExit = utils.printErrorAndExit;
