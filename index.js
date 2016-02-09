@@ -3,5 +3,5 @@
 */
 
 module.exports = {
-    jslint: require('./lib/jslint')
+    jslint: require("./lib/jslint")
 };

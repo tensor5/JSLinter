@@ -1,7 +1,7 @@
-import optErr from 'optionErrors';
+import optErr from "optionErrors";
 
 function parseCommandLineArgs(argv) {
-    'use strict';
+    "use strict";
     var key;
     var match;
     var notStop = true;
@@ -11,7 +11,7 @@ function parseCommandLineArgs(argv) {
 
     return argv.reduce(function (conf, arg) {
         if (notStop) {
-            if (arg === '--') {
+            if (arg === "--") {
                 notStop = false;
                 return conf;
             }
@@ -21,39 +21,39 @@ function parseCommandLineArgs(argv) {
                 key = match[1];
                 value = match[2];
                 switch (key) {
-                case 'bitwise':
-                case 'browser':
-                case 'couch':
-                case 'devel':
-                case 'es6':
-                case 'eval':
-                case 'for':
-                case 'fudge':
-                case 'node':
-                case 'this':
-                case 'white':
+                case "bitwise":
+                case "browser":
+                case "couch":
+                case "devel":
+                case "es6":
+                case "eval":
+                case "for":
+                case "fudge":
+                case "node":
+                case "this":
+                case "white":
                     switch (value) {
-                    case 'true':
+                    case "true":
                     case undefined:
                         conf.options[key] = true;
                         break;
-                    case 'false':
+                    case "false":
                         conf.options[key] = false;
                         break;
                     default:
                         optErr.notBool(key);
                     }
                     return conf;
-                case 'maxerr':
-                case 'maxlen':
+                case "maxerr":
+                case "maxlen":
                     num = Number.parseInt(value);
                     if (Number.isNaN(num)) {
                         optErr.notNum(key);
                     }
                     conf.options[key] = num;
                     return conf;
-                case 'raw':
-                case 'sha-bang':
+                case "raw":
+                case "sha-bang":
                     if (value !== undefined) {
                         optErr.unexpectedValue(key);
                     }
@@ -71,7 +71,7 @@ function parseCommandLineArgs(argv) {
         filePaths: [],
         flags: {
             raw: false,
-            'sha-bang': false
+            "sha-bang": false
         },
         options: {}
     });

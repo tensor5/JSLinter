@@ -1,18 +1,18 @@
 var myPlugin = {
     resolveId: function resolveId(moduleName) {
-        'use strict';
-        return 'src/' + moduleName + '.js';
+        "use strict";
+        return "src/" + moduleName + ".js";
     }
 };
-var output = 'jslint';
-var utils = require('./utils');
+var output = "jslint";
+var utils = require("./utils");
 var printDone = utils.printDone;
 var printErrorAndExit = utils.printErrorAndExit;
 
 function chmodPromise(path, mode) {
-    'use strict';
+    "use strict";
     return new Promise(function (resolve, reject) {
-        require('fs').chmod(path, mode, function onChmodData(err) {
+        require("fs").chmod(path, mode, function onChmodData(err) {
             if (err) {
                 reject(err);
             } else {
@@ -22,28 +22,28 @@ function chmodPromise(path, mode) {
     });
 }
 
-process.stdout.write('Generating executable bundle... ');
+process.stdout.write("Generating executable bundle... ");
 
-require('rollup')
+require("rollup")
     .rollup({
-        entry: 'main',
+        entry: "main",
         plugins: [myPlugin]
     })
     .then(printDone)
     .then(function writeBundle(bundle) {
-        'use strict';
-        process.stdout.write('Writing bundle to \'' + output + '\'... ');
+        "use strict";
+        process.stdout.write("Writing bundle to '" + output + "'... ");
         return bundle.generate({
-            banner: '#!/usr/bin/env node\n\n/*jslint\n    es6, node\n*/\n',
-            format: 'cjs',
+            banner: "#!/usr/bin/env node\n\n/*jslint\n    es6, node\n*/\n",
+            format: "cjs",
             useStrict: false
-        }).code + '\n';
+        }).code + "\n";
     })
     .then(utils.writeFile.bind(undefined, output))
     .then(printDone)
     .then(function chMod() {
-        'use strict';
-        process.stdout.write('Changing mode to 755... ');
+        "use strict";
+        process.stdout.write("Changing mode to 755... ");
         return chmodPromise(output, 493);
     })
     .then(printDone)

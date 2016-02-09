@@ -1,10 +1,10 @@
 function highlight(str) {
-    'use strict';
-    return '\x1B[7m' + str + '\x1B[27m';
+    "use strict";
+    return "\x1B[7m" + str + "\x1B[27m";
 }
 
 function highlightCol(str, i) {
-    'use strict';
+    "use strict";
     var c = str.charAt(i);
     var code = str.charCodeAt(i);
     var codeOther;
@@ -34,11 +34,11 @@ function highlightCol(str, i) {
 }
 
 function paddedNumber(totalSpace, number) {
-    'use strict';
+    "use strict";
 
     var digitString = number.toString();
     var padding = totalSpace - digitString.length;
-    var space = ' ';
+    var space = " ";
 
     if (padding >= 0) {
         return space.repeat(padding) + digitString;
@@ -48,7 +48,7 @@ function paddedNumber(totalSpace, number) {
 }
 
 function displayErrors(path, data) {
-    'use strict';
+    "use strict";
 
     var fudge = +!!data.option.fudge;
     var maxLine;
@@ -58,10 +58,10 @@ function displayErrors(path, data) {
     var tooMany = numberOfWarnings >= maxerr;
     var tooManyNumber = numberOfWarnings - tooMany;
     var tooManyNumberDigits = tooManyNumber.toString().length;
-    var unable = 'JSLint was unable to finish.';
+    var unable = "JSLint was unable to finish.";
 
     if (numberOfWarnings !== 0) {
-        console.log('\n%s', path);
+        console.log("\n%s", path);
         maxLine = data.warnings[numberOfWarnings - 1].line + fudge;
         maxLineDigits = maxLine.toString().length;
     }
@@ -74,19 +74,19 @@ function displayErrors(path, data) {
         var messageNum;
 
         if (i === maxerr && data.stop) {
-            console.log(' ', message, unable);
+            console.log(" ", message, unable);
         } else {
             messageCol = warning.column;
             messageColHi = highlightCol(data.lines[warning.line], messageCol);
             messageLine = warning.line + fudge;
             messageLineHi = highlight(paddedNumber(maxLineDigits, messageLine));
             messageNum = paddedNumber(tooManyNumberDigits, i + 1);
-            console.log('  #%s %s', messageNum, message);
-            console.log('  %s %s', messageLineHi, messageColHi);
+            console.log("  #%s %s", messageNum, message);
+            console.log("  %s %s", messageLineHi, messageColHi);
         }
     });
     if (data.stop && !tooMany) {
-        console.log(' ', unable);
+        console.log(" ", unable);
     }
 }
 

@@ -1,8 +1,8 @@
-import displayErrors from 'displayErrors';
-import extend from 'extend';
-import parseCommandLineArgs from 'parseCommandLineArgs';
-import P from 'promises';
-import Node from 'requires';
+import displayErrors from "displayErrors";
+import extend from "extend";
+import parseCommandLineArgs from "parseCommandLineArgs";
+import P from "promises";
+import Node from "requires";
 
 var cwd = process.cwd();
 var flags;
@@ -12,7 +12,7 @@ var cmdLineOpts;
 var parsedArgs;
 
 function printErrorAndExit(err) {
-    'use strict';
+    "use strict";
     console.error(err.toString());
     process.exit(1);
 }
@@ -27,33 +27,33 @@ filePaths = parsedArgs.filePaths;
 cmdLineOpts = parsedArgs.options;
 flags = parsedArgs.flags;
 
-if (process.platform !== 'win32') {
+if (process.platform !== "win32") {
     homeDir = process.env.HOME;
 } else {
     homeDir = process.env.USERPROFILE;
 }
 
 if (filePaths.length === 0) {
-    printErrorAndExit('No files specified.');
+    printErrorAndExit("No files specified.");
 }
 
 function removeShaBang(str, shaBang) {
-    'use strict';
+    "use strict";
     if (shaBang) {
-        return str.replace(/^#!.*(\n|\r\n?)/, '');
+        return str.replace(/^#!.*(\n|\r\n?)/, "");
     }
     return str;
 }
 
 function lintFile(homeConf, file, prevReport) {
-    'use strict';
-    return P.readFile(file, 'utf8')
+    "use strict";
+    return P.readFile(file, "utf8")
         .then(function (data) {
             return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
                     var newConf = extend(conf, cmdLineOpts);
                     var report = Node
-                        .jslint(removeShaBang(data, flags['sha-bang']),
+                        .jslint(removeShaBang(data, flags["sha-bang"]),
                                 newConf);
 
                     if (flags.raw) {
@@ -71,7 +71,7 @@ function lintFile(homeConf, file, prevReport) {
 
 P.readConf(homeDir, {})
     .then(function (conf) {
-        'use strict';
+        "use strict";
         var promise = filePaths.reduce(function (prom, file) {
             return prom.then(lintFile.bind(undefined, conf, file));
         }, Promise.resolve([]));

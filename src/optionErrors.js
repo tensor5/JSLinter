@@ -1,21 +1,21 @@
 function notBool(key) {
-    'use strict';
-    throw new Error('\'' + key + '\' must have a Boolean value.');
+    "use strict";
+    throw new Error("'" + key + "' must have a Boolean value.");
 }
 
 function notKnown(key) {
-    'use strict';
-    throw new Error('Unexpected option: \'' + key + '\'.');
+    "use strict";
+    throw new Error("Unexpected option: '" + key + "'.");
 }
 
 function notNum(key) {
-    'use strict';
-    throw new Error('\'' + key + '\' must have a numeric value.');
+    "use strict";
+    throw new Error("'" + key + "' must have a numeric value.");
 }
 
 function unexpectedValue(key) {
-    'use strict';
-    throw new Error('\'' + key + '\' does not expect a value.');
+    "use strict";
+    throw new Error("'" + key + "' does not expect a value.");
 }
 
 export default {

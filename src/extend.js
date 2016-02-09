@@ -1,5 +1,5 @@
 function extend(obj, newProp) {
-    'use strict';
+    "use strict";
 
     var newObj = {};
     Object.keys(obj).forEach(function (key) {

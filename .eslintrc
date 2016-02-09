@@ -19,7 +19,7 @@
         "no-console": 0,
         "quotes": [
             2,
-            "single"
+            "double"
         ],
         "semi": [
             2,

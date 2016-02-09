@@ -5,12 +5,12 @@
 */
 
 function highlight(str) {
-    'use strict';
-    return '\x1B[7m' + str + '\x1B[27m';
+    "use strict";
+    return "\x1B[7m" + str + "\x1B[27m";
 }
 
 function highlightCol(str, i) {
-    'use strict';
+    "use strict";
     var c = str.charAt(i);
     var code = str.charCodeAt(i);
     var codeOther;
@@ -40,11 +40,11 @@ function highlightCol(str, i) {
 }
 
 function paddedNumber(totalSpace, number) {
-    'use strict';
+    "use strict";
 
     var digitString = number.toString();
     var padding = totalSpace - digitString.length;
-    var space = ' ';
+    var space = " ";
 
     if (padding >= 0) {
         return space.repeat(padding) + digitString;
@@ -54,7 +54,7 @@ function paddedNumber(totalSpace, number) {
 }
 
 function displayErrors(path, data) {
-    'use strict';
+    "use strict";
 
     var fudge = +!!data.option.fudge;
     var maxLine;
@@ -64,10 +64,10 @@ function displayErrors(path, data) {
     var tooMany = numberOfWarnings >= maxerr;
     var tooManyNumber = numberOfWarnings - tooMany;
     var tooManyNumberDigits = tooManyNumber.toString().length;
-    var unable = 'JSLint was unable to finish.';
+    var unable = "JSLint was unable to finish.";
 
     if (numberOfWarnings !== 0) {
-        console.log('\n%s', path);
+        console.log("\n%s", path);
         maxLine = data.warnings[numberOfWarnings - 1].line + fudge;
         maxLineDigits = maxLine.toString().length;
     }
@@ -80,24 +80,24 @@ function displayErrors(path, data) {
         var messageNum;
 
         if (i === maxerr && data.stop) {
-            console.log(' ', message, unable);
+            console.log(" ", message, unable);
         } else {
             messageCol = warning.column;
             messageColHi = highlightCol(data.lines[warning.line], messageCol);
             messageLine = warning.line + fudge;
             messageLineHi = highlight(paddedNumber(maxLineDigits, messageLine));
             messageNum = paddedNumber(tooManyNumberDigits, i + 1);
-            console.log('  #%s %s', messageNum, message);
-            console.log('  %s %s', messageLineHi, messageColHi);
+            console.log("  #%s %s", messageNum, message);
+            console.log("  %s %s", messageLineHi, messageColHi);
         }
     });
     if (data.stop && !tooMany) {
-        console.log(' ', unable);
+        console.log(" ", unable);
     }
 }
 
 function extend(obj, newProp) {
-    'use strict';
+    "use strict";
 
     var newObj = {};
     Object.keys(obj).forEach(function (key) {
@@ -110,23 +110,23 @@ function extend(obj, newProp) {
 }
 
 function notBool(key) {
-    'use strict';
-    throw new Error('\'' + key + '\' must have a Boolean value.');
+    "use strict";
+    throw new Error("'" + key + "' must have a Boolean value.");
 }
 
 function notKnown(key) {
-    'use strict';
-    throw new Error('Unexpected option: \'' + key + '\'.');
+    "use strict";
+    throw new Error("Unexpected option: '" + key + "'.");
 }
 
 function notNum(key) {
-    'use strict';
-    throw new Error('\'' + key + '\' must have a numeric value.');
+    "use strict";
+    throw new Error("'" + key + "' must have a numeric value.");
 }
 
 function unexpectedValue(key) {
-    'use strict';
-    throw new Error('\'' + key + '\' does not expect a value.');
+    "use strict";
+    throw new Error("'" + key + "' does not expect a value.");
 }
 
 var optErr = {
@@ -137,7 +137,7 @@ var optErr = {
 };
 
 function parseCommandLineArgs(argv) {
-    'use strict';
+    "use strict";
     var key;
     var match;
     var notStop = true;
@@ -147,7 +147,7 @@ function parseCommandLineArgs(argv) {
 
     return argv.reduce(function (conf, arg) {
         if (notStop) {
-            if (arg === '--') {
+            if (arg === "--") {
                 notStop = false;
                 return conf;
             }
@@ -157,39 +157,39 @@ function parseCommandLineArgs(argv) {
                 key = match[1];
                 value = match[2];
                 switch (key) {
-                case 'bitwise':
-                case 'browser':
-                case 'couch':
-                case 'devel':
-                case 'es6':
-                case 'eval':
-                case 'for':
-                case 'fudge':
-                case 'node':
-                case 'this':
-                case 'white':
+                case "bitwise":
+                case "browser":
+                case "couch":
+                case "devel":
+                case "es6":
+                case "eval":
+                case "for":
+                case "fudge":
+                case "node":
+                case "this":
+                case "white":
                     switch (value) {
-                    case 'true':
+                    case "true":
                     case undefined:
                         conf.options[key] = true;
                         break;
-                    case 'false':
+                    case "false":
                         conf.options[key] = false;
                         break;
                     default:
                         optErr.notBool(key);
                     }
                     return conf;
-                case 'maxerr':
-                case 'maxlen':
+                case "maxerr":
+                case "maxlen":
                     num = Number.parseInt(value);
                     if (Number.isNaN(num)) {
                         optErr.notNum(key);
                     }
                     conf.options[key] = num;
                     return conf;
-                case 'raw':
-                case 'sha-bang':
+                case "raw":
+                case "sha-bang":
                     if (value !== undefined) {
                         optErr.unexpectedValue(key);
                     }
@@ -207,36 +207,36 @@ function parseCommandLineArgs(argv) {
         filePaths: [],
         flags: {
             raw: false,
-            'sha-bang': false
+            "sha-bang": false
         },
         options: {}
     });
 }
 
 function parseConfigurations(oldConfObj, str) {
-    'use strict';
+    "use strict";
     var newConfObj = JSON.parse(str);
 
     Object.keys(newConfObj).forEach(function isValidOption(key) {
         switch (key) {
-        case 'bitwise':
-        case 'browser':
-        case 'couch':
-        case 'devel':
-        case 'es6':
-        case 'eval':
-        case 'for':
-        case 'fudge':
-        case 'node':
-        case 'this':
-        case 'white':
-            if (typeof newConfObj[key] !== 'boolean') {
+        case "bitwise":
+        case "browser":
+        case "couch":
+        case "devel":
+        case "es6":
+        case "eval":
+        case "for":
+        case "fudge":
+        case "node":
+        case "this":
+        case "white":
+            if (typeof newConfObj[key] !== "boolean") {
                 optErr.notBool(key);
             }
             break;
-        case 'maxerr':
-        case 'maxlen':
-            if (typeof newConfObj[key] !== 'number') {
+        case "maxerr":
+        case "maxlen":
+            if (typeof newConfObj[key] !== "number") {
                 optErr.notNum(key);
             }
             break;
@@ -245,7 +245,7 @@ function parseConfigurations(oldConfObj, str) {
         }
     });
 
-    if (oldConfObj && typeof oldConfObj === 'object') {
+    if (oldConfObj && typeof oldConfObj === "object") {
         return extend(oldConfObj, newConfObj);
     }
 
@@ -253,15 +253,15 @@ function parseConfigurations(oldConfObj, str) {
 }
 
 var Node = Object.freeze({
-    fs: require('fs'),
-    jslint: require('./index').jslint,
-    path: require('path')
+    fs: require("fs"),
+    jslint: require("./index").jslint,
+    path: require("path")
 });
 
-var confFile = '.jslintrc';
+var confFile = ".jslintrc";
 
 function readFile(filename, options) {
-    'use strict';
+    "use strict";
     return new Promise(function (resolve, reject) {
         Node.fs.readFile(filename, options, function (err, data) {
             if (err) {
@@ -276,17 +276,17 @@ function readFile(filename, options) {
 // Promise to read "pathname" and use it to update oldConf.
 // If "pathname" is a directory, read "pathname/.jslintrc" instead.
 function readConf(pathname, oldConf) {
-    'use strict';
-    return readFile(pathname, 'utf8')
+    "use strict";
+    return readFile(pathname, "utf8")
         .catch(function (err) {
-            if (err.code === 'EISDIR') {
-                return readFile(Node.path.join(pathname, confFile), 'utf8');
+            if (err.code === "EISDIR") {
+                return readFile(Node.path.join(pathname, confFile), "utf8");
             }
             throw err;
         })
         .then(parseConfigurations.bind(undefined, oldConf))
         .catch(function (err) {
-            if (err.code === 'ENOENT') {
+            if (err.code === "ENOENT") {
                 return oldConf;
             }
             throw err;
@@ -294,7 +294,7 @@ function readConf(pathname, oldConf) {
 }
 
 function readConfs(pathnames, oldConf) {
-    'use strict';
+    "use strict";
     return pathnames
         .reduce((prom, path) => prom.then(readConf.bind(undefined, path)),
                 Promise.resolve(oldConf));
@@ -302,24 +302,24 @@ function readConfs(pathnames, oldConf) {
 
 // Promise to read configuration files from basePath to path.
 function readProjConfs(baseDir, dir, oldConf) {
-    'use strict';
+    "use strict";
 
     var splitPath = Node.path.relative(baseDir, dir).split(Node.path.sep);
 
     // dir is not in baseDir subtree.
-    if (splitPath[0] === '..') {
+    if (splitPath[0] === "..") {
         return Promise.resolve(oldConf);
     }
 
     // baseDir is the same as dir.
-    if (splitPath[0] === '') {
+    if (splitPath[0] === "") {
         return readConf(dir, oldConf);
     }
 
     // dir is in baseDir subtree.
     return readConfs(splitPath
         .reduce((prev, elem, ix) => prev.concat(Node.path.join(prev[ix], elem)),
-                ['.']),
+                ["."]),
             oldConf);
 }
 
@@ -337,7 +337,7 @@ var cmdLineOpts;
 var parsedArgs;
 
 function printErrorAndExit(err) {
-    'use strict';
+    "use strict";
     console.error(err.toString());
     process.exit(1);
 }
@@ -352,33 +352,33 @@ filePaths = parsedArgs.filePaths;
 cmdLineOpts = parsedArgs.options;
 flags = parsedArgs.flags;
 
-if (process.platform !== 'win32') {
+if (process.platform !== "win32") {
     homeDir = process.env.HOME;
 } else {
     homeDir = process.env.USERPROFILE;
 }
 
 if (filePaths.length === 0) {
-    printErrorAndExit('No files specified.');
+    printErrorAndExit("No files specified.");
 }
 
 function removeShaBang(str, shaBang) {
-    'use strict';
+    "use strict";
     if (shaBang) {
-        return str.replace(/^#!.*(\n|\r\n?)/, '');
+        return str.replace(/^#!.*(\n|\r\n?)/, "");
     }
     return str;
 }
 
 function lintFile(homeConf, file, prevReport) {
-    'use strict';
-    return P.readFile(file, 'utf8')
+    "use strict";
+    return P.readFile(file, "utf8")
         .then(function (data) {
             return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
                     var newConf = extend(conf, cmdLineOpts);
                     var report = Node
-                        .jslint(removeShaBang(data, flags['sha-bang']),
+                        .jslint(removeShaBang(data, flags["sha-bang"]),
                                 newConf);
 
                     if (flags.raw) {
@@ -396,7 +396,7 @@ function lintFile(homeConf, file, prevReport) {
 
 P.readConf(homeDir, {})
     .then(function (conf) {
-        'use strict';
+        "use strict";
         var promise = filePaths.reduce(function (prom, file) {
             return prom.then(lintFile.bind(undefined, conf, file));
         }, Promise.resolve([]));

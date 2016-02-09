@@ -1,19 +1,19 @@
-var fs = require('fs');
+var fs = require("fs");
 
 function printDone(a) {
-    'use strict';
-    console.log('done.');
+    "use strict";
+    console.log("done.");
     return a;
 }
 
 function printErrorAndExit(err) {
-    'use strict';
-    console.error(err.name + ': ' + err.message);
+    "use strict";
+    console.error(err.name + ": " + err.message);
     process.exit(1);
 }
 
 function readFile(filename, options) {
-    'use strict';
+    "use strict";
     return new Promise(function (resolve, reject) {
         fs.readFile(filename, options, function (err, data) {
             if (err) {
@@ -26,7 +26,7 @@ function readFile(filename, options) {
 }
 
 function writeFile(filename, data, options) {
-    'use strict';
+    "use strict";
     return new Promise(function (resolve, reject) {
         fs.writeFile(filename, data, options, function (err) {
             if (err) {
