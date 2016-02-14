@@ -29,6 +29,7 @@ function parseCommandLineArgs(argv) {
                 case "eval":
                 case "for":
                 case "fudge":
+                case "multivar":
                 case "node":
                 case "this":
                 case "white":

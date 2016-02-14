@@ -15,6 +15,7 @@ function parseConfigurations(oldConfObj, str) {
         case "eval":
         case "for":
         case "fudge":
+        case "multivar":
         case "node":
         case "this":
         case "white":

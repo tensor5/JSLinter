@@ -54,6 +54,7 @@ specified through the following keys:
 -   `fudge`
 -   `maxerr`
 -   `maxlen`
+-   `multivar`
 -   `node`
 -   `this`
 -   `white`
@@ -110,6 +111,7 @@ follow the exact grammar specified below:
 -   `--fudge[={true|false}]`
 -   `--maxerr=<NUM>`
 -   `--maxlen=<NUM>`
+-   `--multivar[={true|false}]`
 -   `--node[={true|false}]`
 -   `--this[={true|false}]`
 -   `--white[={true|false}]`
