@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.1.20160217 (2016-02-18)
+
+-   Update to JSLint edition 2016-02-17.
+
 ## Version 1.1.20160207 (2016-02-14)
 
 -   Add `multivar` command line option, introduced in JSLint edition 2016-01-14.
