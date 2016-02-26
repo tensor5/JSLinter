@@ -191,6 +191,7 @@ function parseCommandLineArgs(argv) {
                     return conf;
                 case "raw":
                 case "sha-bang":
+                case "version":
                     if (value !== undefined) {
                         optErr.unexpectedValue(key);
                     }
@@ -208,7 +209,8 @@ function parseCommandLineArgs(argv) {
         filePaths: [],
         flags: {
             raw: false,
-            "sha-bang": false
+            "sha-bang": false,
+            version: false
         },
         options: {}
     });
@@ -257,6 +259,7 @@ function parseConfigurations(oldConfObj, str) {
 var Node = Object.freeze({
     fs: require("fs"),
     jslint: require("./index").jslint,
+    jslintEdition: require("./index").jslintEdition,
     path: require("path")
 });
 
@@ -353,6 +356,14 @@ try {
 filePaths = parsedArgs.filePaths;
 cmdLineOpts = parsedArgs.options;
 flags = parsedArgs.flags;
+
+if (flags.version) {
+    const pkg = require("./package.json");
+    console.log("jslint (JSLinter) %s (JSLint edition %s)",
+            pkg.version, Node.jslintEdition);
+    console.log("Copyright (c) 2015-2016 Nicola Squartini");
+    process.exit(0);
+}
 
 if (process.platform !== "win32") {
     homeDir = process.env.HOME;

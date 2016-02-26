@@ -35,7 +35,8 @@ result = jslint(source, options, globals);
 ```
 
 The `jslint` object imported above is the function described
-[here][jslint-func].
+[here][jslint-func]. `require('jslinter').jslintEdition` is the edition (a date
+string) of JSLint used internally.
 
 The `source` parameter is the JavaScript code that you want to check, and it can
 be provided in the form of a string or an array of strings, one for each line of
@@ -142,6 +143,8 @@ section, and they must have the correct value type, e.g.:
     -   `warnings`: the array of warning objects
 
 -   `--sha-bang`: ignore the first line of input if it begins with `#!`.
+
+-   `--version`: print version and exit.
 
 [jslint]: http://www.jslint.com/ "The JavaScript Code Quality Tool"
 [jslint-func]: http://www.jslint.com/function.html "The jslint Function"

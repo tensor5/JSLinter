@@ -27,6 +27,14 @@ filePaths = parsedArgs.filePaths;
 cmdLineOpts = parsedArgs.options;
 flags = parsedArgs.flags;
 
+if (flags.version) {
+    const pkg = require("./package.json");
+    console.log("jslint (JSLinter) %s (JSLint edition %s)",
+            pkg.version, Node.jslintEdition);
+    console.log("Copyright (c) 2015-2016 Nicola Squartini");
+    process.exit(0);
+}
+
 if (process.platform !== "win32") {
     homeDir = process.env.HOME;
 } else {

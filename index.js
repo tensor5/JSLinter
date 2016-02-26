@@ -1,7 +1,14 @@
 /*jslint
-    node
+    es6, node
 */
 
+/*property
+    edition, exports, jslint, jslintEdition
+*/
+
+const jslint = require("./lib/jslint");
+
 module.exports = {
-    jslint: require("./lib/jslint")
+    jslint: jslint,
+    jslintEdition: jslint([]).edition
 };
