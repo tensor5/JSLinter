@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.2.1 (2016-03-04)
+
+-   Update to JSLint edition 2016-03-03.
+
 ## Version 1.2.0 (2016-02-27)
 
 -   New property `jslintEdition`: a string containing the edition of JSLint used internally.
