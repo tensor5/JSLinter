@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.2.8 (2016-05-13)
+
+-   Update to JSLint edition 2016-05-10.
+
 ## Version 1.2.7 (2016-05-11)
 
 -   Update to JSLint edition 2016-05-09.
