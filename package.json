@@ -20,7 +20,7 @@
     "jslint": "jslint"
   },
   "devDependencies": {
-    "rollup": "0.25.0"
+    "rollup": ">=0.25 <0.27"
   },
   "scripts": {
     "build-bin": "node scripts/buildBin.js",
