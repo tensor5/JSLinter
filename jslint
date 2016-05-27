@@ -96,19 +96,6 @@ function displayErrors(path, data) {
     }
 }
 
-function extend(obj, newProp) {
-    "use strict";
-
-    var newObj = {};
-    Object.keys(obj).forEach(function (key) {
-        newObj[key] = obj[key];
-    });
-    Object.keys(newProp).forEach(function (key) {
-        newObj[key] = newProp[key];
-    });
-    return newObj;
-}
-
 function notBool(key) {
     "use strict";
     throw new Error("'" + key + "' must have a Boolean value.");
@@ -250,7 +237,7 @@ function parseConfigurations(oldConfObj, str) {
     });
 
     if (oldConfObj && typeof oldConfObj === "object") {
-        return extend(oldConfObj, newConfObj);
+        return Object.assign({}, oldConfObj, newConfObj);
     }
 
     return newConfObj;
@@ -389,7 +376,7 @@ function lintFile(homeConf, file, prevReport) {
         .then(function (data) {
             return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
-                    var newConf = extend(conf, cmdLineOpts);
+                    var newConf = Object.assign({}, conf, cmdLineOpts);
                     var report = Node
                         .jslint(removeShaBang(data, flags["sha-bang"]),
                                 newConf);

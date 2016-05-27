@@ -1,5 +1,4 @@
 import displayErrors from "displayErrors";
-import extend from "extend";
 import parseCommandLineArgs from "parseCommandLineArgs";
 import P from "promises";
 import Node from "requires";
@@ -59,7 +58,7 @@ function lintFile(homeConf, file, prevReport) {
         .then(function (data) {
             return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
-                    var newConf = extend(conf, cmdLineOpts);
+                    var newConf = Object.assign({}, conf, cmdLineOpts);
                     var report = Node
                         .jslint(removeShaBang(data, flags["sha-bang"]),
                                 newConf);

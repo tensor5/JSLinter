@@ -1,4 +1,3 @@
-import extend from "extend";
 import optErr from "optionErrors";
 
 function parseConfigurations(oldConfObj, str) {
@@ -35,7 +34,7 @@ function parseConfigurations(oldConfObj, str) {
     });
 
     if (oldConfObj && typeof oldConfObj === "object") {
-        return extend(oldConfObj, newConfObj);
+        return Object.assign({}, oldConfObj, newConfObj);
     }
 
     return newConfObj;
