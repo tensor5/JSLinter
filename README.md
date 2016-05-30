@@ -134,17 +134,24 @@ section, and they must have the correct value type, e.g.:
 `jslint` also recognize some command-line specific flags:
 
 -   `--raw`: output the report as raw JSON, useful when the output is expected
-    to be parsed by another tool. The format is an array of objects, one for
-    each input file, containing the following fields:
+    to be parsed by another tool. Unless the `--version` flag is used, the
+    format is an array of objects, one for each input file, containing the
+    following fields:
 
     -   `file`: the name of the input file
     -   `option`: JSLint option object
     -   `stop`: true if JSLint was not able to process the entire file
     -   `warnings`: the array of warning objects
 
+    If the `--raw` flag is used together with `--version`, the format is:
+
+    -   `version`: the version of JSLinter
+    -   `jslintEdition`: the edition of JSLint
+
 -   `--sha-bang`: ignore the first line of input if it begins with `#!`.
 
--   `--version`: print version and exit.
+-   `--version`: print version and exit. If used together with `--raw`, the
+    output is in JSON format (see `--raw` above).
 
 [jslint]: http://www.jslint.com/ "The JavaScript Code Quality Tool"
 [jslint-func]: http://www.jslint.com/function.html "The jslint Function"

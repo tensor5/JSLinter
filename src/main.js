@@ -27,10 +27,17 @@ cmdLineOpts = parsedArgs.options;
 flags = parsedArgs.flags;
 
 if (flags.version) {
-    const pkg = require("./package.json");
-    console.log("jslint (JSLinter) %s (JSLint edition %s)",
-            pkg.version, Node.jslintEdition);
-    console.log("Copyright (c) 2015-2016 Nicola Squartini");
+    const version = require("./package.json").version;
+    if (flags.raw) {
+        process.stdout.write(JSON.stringify({
+            version: version,
+            jslintEdition: Node.jslintEdition
+        }));
+    } else {
+        console.log("jslint (JSLinter) %s (JSLint edition %s)",
+                version, Node.jslintEdition);
+        console.log("Copyright (c) 2015-2016 Nicola Squartini");
+    }
     process.exit(0);
 }
 
