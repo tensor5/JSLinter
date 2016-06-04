@@ -1,7 +1,6 @@
 import optErr from "optionErrors";
 
 function parseConfigurations(oldConfObj, str) {
-    "use strict";
     var newConfObj = JSON.parse(str);
 
     Object.keys(newConfObj).forEach(function isValidOption(key) {

@@ -4,13 +4,13 @@
     es6, node
 */
 
+"use strict";
+
 function highlight(str) {
-    "use strict";
     return "\x1B[7m" + str + "\x1B[27m";
 }
 
 function highlightCol(str, i) {
-    "use strict";
     var c = str.charAt(i);
     var code = str.charCodeAt(i);
     var codeOther;
@@ -40,8 +40,6 @@ function highlightCol(str, i) {
 }
 
 function paddedNumber(totalSpace, number) {
-    "use strict";
-
     var digitString = number.toString();
     var padding = totalSpace - digitString.length;
     var space = " ";
@@ -54,8 +52,6 @@ function paddedNumber(totalSpace, number) {
 }
 
 function displayErrors(path, data) {
-    "use strict";
-
     var fudge = +!!data.option.fudge;
     var maxLine;
     var maxLineDigits;
@@ -96,35 +92,22 @@ function displayErrors(path, data) {
     }
 }
 
-function notBool(key) {
-    "use strict";
-    throw new Error("'" + key + "' must have a Boolean value.");
-}
-
-function notKnown(key) {
-    "use strict";
-    throw new Error("Unexpected option: '" + key + "'.");
-}
-
-function notNum(key) {
-    "use strict";
-    throw new Error("'" + key + "' must have a numeric value.");
-}
-
-function unexpectedValue(key) {
-    "use strict";
-    throw new Error("'" + key + "' does not expect a value.");
-}
-
 var optErr = {
-    notBool: notBool,
-    notKnown: notKnown,
-    notNum: notNum,
-    unexpectedValue: unexpectedValue
+    notBool: function notBool(key) {
+        throw new Error("'" + key + "' must have a Boolean value.");
+    },
+    notKnown: function notKnown(key) {
+        throw new Error("Unexpected option: '" + key + "'.");
+    },
+    notNum: function notNum(key) {
+        throw new Error("'" + key + "' must have a numeric value.");
+    },
+    unexpectedValue: function unexpectedValue(key) {
+        throw new Error("'" + key + "' does not expect a value.");
+    }
 };
 
 function parseCommandLineArgs(argv) {
-    "use strict";
     var key;
     var match;
     var notStop = true;
@@ -204,7 +187,6 @@ function parseCommandLineArgs(argv) {
 }
 
 function parseConfigurations(oldConfObj, str) {
-    "use strict";
     var newConfObj = JSON.parse(str);
 
     Object.keys(newConfObj).forEach(function isValidOption(key) {
@@ -253,7 +235,6 @@ var Node = Object.freeze({
 var confFile = ".jslintrc";
 
 function readFile(filename, options) {
-    "use strict";
     return new Promise(function (resolve, reject) {
         Node.fs.readFile(filename, options, function (err, data) {
             if (err) {
@@ -268,7 +249,6 @@ function readFile(filename, options) {
 // Promise to read "pathname" and use it to update oldConf.
 // If "pathname" is a directory, read "pathname/.jslintrc" instead.
 function readConf(pathname, oldConf) {
-    "use strict";
     return readFile(pathname, "utf8")
         .catch(function (err) {
             if (err.code === "EISDIR") {
@@ -286,7 +266,6 @@ function readConf(pathname, oldConf) {
 }
 
 function readConfs(pathnames, oldConf) {
-    "use strict";
     return pathnames
         .reduce((prom, path) => prom.then(readConf.bind(undefined, path)),
                 Promise.resolve(oldConf));
@@ -294,8 +273,6 @@ function readConfs(pathnames, oldConf) {
 
 // Promise to read configuration files from basePath to path.
 function readProjConfs(baseDir, dir, oldConf) {
-    "use strict";
-
     var splitPath = Node.path.relative(baseDir, dir).split(Node.path.sep);
 
     // dir is not in baseDir subtree.
@@ -329,7 +306,6 @@ var cmdLineOpts;
 var parsedArgs;
 
 function printErrorAndExit(err) {
-    "use strict";
     console.error(err.toString());
     process.exit(1);
 }
@@ -370,7 +346,6 @@ if (filePaths.length === 0) {
 }
 
 function removeShaBang(str, shaBang) {
-    "use strict";
     if (shaBang) {
         return str.replace(/^#!.*(\n|\r\n?)/, "");
     }
@@ -378,7 +353,6 @@ function removeShaBang(str, shaBang) {
 }
 
 function lintFile(homeConf, file, prevReport) {
-    "use strict";
     return P.readFile(file, "utf8")
         .then(function (data) {
             return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
@@ -403,7 +377,6 @@ function lintFile(homeConf, file, prevReport) {
 
 P.readConf(homeDir, {})
     .then(function (conf) {
-        "use strict";
         var promise = filePaths.reduce(function (prom, file) {
             return prom.then(lintFile.bind(undefined, conf, file));
         }, Promise.resolve([]));

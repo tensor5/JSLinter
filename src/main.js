@@ -11,7 +11,6 @@ var cmdLineOpts;
 var parsedArgs;
 
 function printErrorAndExit(err) {
-    "use strict";
     console.error(err.toString());
     process.exit(1);
 }
@@ -52,7 +51,6 @@ if (filePaths.length === 0) {
 }
 
 function removeShaBang(str, shaBang) {
-    "use strict";
     if (shaBang) {
         return str.replace(/^#!.*(\n|\r\n?)/, "");
     }
@@ -60,7 +58,6 @@ function removeShaBang(str, shaBang) {
 }
 
 function lintFile(homeConf, file, prevReport) {
-    "use strict";
     return P.readFile(file, "utf8")
         .then(function (data) {
             return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
@@ -85,7 +82,6 @@ function lintFile(homeConf, file, prevReport) {
 
 P.readConf(homeDir, {})
     .then(function (conf) {
-        "use strict";
         var promise = filePaths.reduce(function (prom, file) {
             return prom.then(lintFile.bind(undefined, conf, file));
         }, Promise.resolve([]));

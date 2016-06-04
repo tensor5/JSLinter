@@ -34,9 +34,10 @@ require("rollup")
         "use strict";
         process.stdout.write("Writing bundle to '" + output + "'... ");
         return bundle.generate({
-            banner: "#!/usr/bin/env node\n\n/*jslint\n    es6, node\n*/\n",
+            banner: "#!/usr/bin/env node\n\n/*jslint\n    es6, node\n*/\n" +
+                    "\n\"use strict\";\n",
             format: "cjs",
-            useStrict: false
+            useStrict: false  // We add it in double quotes in the banner
         }).code + "\n";
     })
     .then(utils.writeFile.bind(undefined, output))

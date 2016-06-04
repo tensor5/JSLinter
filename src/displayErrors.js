@@ -1,10 +1,8 @@
 function highlight(str) {
-    "use strict";
     return "\x1B[7m" + str + "\x1B[27m";
 }
 
 function highlightCol(str, i) {
-    "use strict";
     var c = str.charAt(i);
     var code = str.charCodeAt(i);
     var codeOther;
@@ -34,8 +32,6 @@ function highlightCol(str, i) {
 }
 
 function paddedNumber(totalSpace, number) {
-    "use strict";
-
     var digitString = number.toString();
     var padding = totalSpace - digitString.length;
     var space = " ";
@@ -48,8 +44,6 @@ function paddedNumber(totalSpace, number) {
 }
 
 function displayErrors(path, data) {
-    "use strict";
-
     var fudge = +!!data.option.fudge;
     var maxLine;
     var maxLineDigits;

@@ -1,7 +1,6 @@
 import optErr from "optionErrors";
 
 function parseCommandLineArgs(argv) {
-    "use strict";
     var key;
     var match;
     var notStop = true;
