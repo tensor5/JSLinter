@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.3.1 (2016-06-06)
+
+-   Update to JSLint edition 2016-06-05.
+
 ## Version 1.3.0 (2016-06-04)
 
 -   If the `--raw` flag is used together with `--version`, output version information in JSON format.
