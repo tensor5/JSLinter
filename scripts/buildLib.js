@@ -17,7 +17,7 @@ function requireJSLintPromise(filename) {
 
 function patchModuleExports(str) {
     "use strict";
-    return str.replace("var jslint = ", "module.exports = ");
+    return str.replace("var jslint = ", "module.exports = Object.freeze");
 }
 
 function patchNode(str) {

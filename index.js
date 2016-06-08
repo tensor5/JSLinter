@@ -3,12 +3,12 @@
 */
 
 /*property
-    edition, exports, jslint, jslintEdition
+    edition, exports, freeze, jslint, jslintEdition
 */
 
 const jslint = require("./lib/jslint");
 
-module.exports = {
+module.exports = Object.freeze({
     jslint: jslint,
     jslintEdition: jslint([]).edition
-};
+});
