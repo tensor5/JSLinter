@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.3.3 (2016-06-09)
+
+-   Update to JSLint edition 2016-06-07.
+
 ## Version 1.3.2 (2016-06-08)
 
 -   Use `Object.freeze()`.
