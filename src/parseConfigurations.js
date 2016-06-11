@@ -15,6 +15,7 @@ function parseConfigurations(oldConfObj, str) {
         case "fudge":
         case "multivar":
         case "node":
+        case "single":
         case "this":
         case "white":
             if (typeof newConfObj[key] !== "boolean") {

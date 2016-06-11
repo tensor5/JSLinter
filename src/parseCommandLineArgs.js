@@ -30,6 +30,7 @@ function parseCommandLineArgs(argv) {
                 case "fudge":
                 case "multivar":
                 case "node":
+                case "single":
                 case "this":
                 case "white":
                     switch (value) {

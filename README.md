@@ -57,6 +57,7 @@ specified through the following keys:
 -   `maxlen`
 -   `multivar`
 -   `node`
+-   `single`
 -   `this`
 -   `white`
 
@@ -114,6 +115,7 @@ follow the exact grammar specified below:
 -   `--maxlen=<NUM>`
 -   `--multivar[={true|false}]`
 -   `--node[={true|false}]`
+-   `--single[={true|false}]`
 -   `--this[={true|false}]`
 -   `--white[={true|false}]`
 
