@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.4.0 (2016-06-11)
+
+-   Update to JSLint edition 2016-06-09.
+-   New `--single` option for `jslint` command to tolerate single quote strings.
+-   Bash completion script.
+
 ## Version 1.3.4 (2016-06-10)
 
 -   Update to JSLint edition 2016-06-08.
