@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 1.4.1 (2016-06-15)
+
+-   Update to JSLint edition 2016-06-13.
+-   Unify configuration reading functions into a single `readConf()`.
+
 ## Version 1.4.0 (2016-06-11)
 
 -   Update to JSLint edition 2016-06-09.
