@@ -60,7 +60,7 @@ function removeShaBang(str, shaBang) {
 function lintFile(homeConf, file, prevReport) {
     return P.readFile(file, "utf8")
         .then(function (data) {
-            return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
+            return P.readConf(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
                     var newConf = Object.assign({}, conf, cmdLineOpts);
                     var report = Node

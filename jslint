@@ -248,55 +248,62 @@ function readFile(filename, options) {
     });
 }
 
-// Promise to read "pathname" and use it to update oldConf.
-// If "pathname" is a directory, read "pathname/.jslintrc" instead.
-function readConf(pathname, oldConf) {
-    return readFile(pathname, "utf8")
-        .catch(function (err) {
-            if (err.code === "EISDIR") {
-                return readFile(Node.path.join(pathname, confFile), "utf8");
-            }
-            throw err;
-        })
-        .then(parseConfigurations.bind(undefined, oldConf))
-        .catch(function (err) {
-            if (err.code === "ENOENT") {
-                return oldConf;
-            }
-            throw err;
-        });
-}
+// 1. readConf(pathname, oldConf)
+//
+//   Promise to read "pathname" and use it to update oldConf.
+//   If "pathname" is a directory, read "pathname/.jslintrc" instead.
+//
+// 2. readConf([path1, path2, path3], oldConf)
+//
+//   Same as readConf(path3, readConf(path2, readConf(path1, oldConf)))
+//
+// 3. readConf("/a/b", "/a/b/c/d", oldConf)
+//
+//   Same as readConf("/a/b/c/d", readConf("/a/b/c", readConf("/a/b", oldConf)))
+function readConf(pathname, pathOrConf, conf) {
+    if (typeof pathOrConf === "string") {  // pathOrConf is a path
+        var splitPath = Node
+            .path.relative(pathname, pathOrConf).split(Node.path.sep);
 
-function readConfs(pathnames, oldConf) {
-    return pathnames
-        .reduce((prom, path) => prom.then(readConf.bind(undefined, path)),
-                Promise.resolve(oldConf));
-}
+        // pathOrConf is not in pathname subtree.
+        if (splitPath[0] === "..") {
+            return Promise.resolve(conf);
+        }
 
-// Promise to read configuration files from basePath to path.
-function readProjConfs(baseDir, dir, oldConf) {
-    var splitPath = Node.path.relative(baseDir, dir).split(Node.path.sep);
+        // pathname is the same as pathOrConf.
+        if (splitPath[0] === "") {
+            return readConf(pathname, conf);
+        }
 
-    // dir is not in baseDir subtree.
-    if (splitPath[0] === "..") {
-        return Promise.resolve(oldConf);
+        // pathOrConf is in pathname subtree.
+        return readConf(splitPath.reduce((prev, elem, ix) => prev
+            .concat(Node.path.join(prev[ix], elem)), ["."]),
+                conf);
     }
 
-    // baseDir is the same as dir.
-    if (splitPath[0] === "") {
-        return readConf(dir, oldConf);
-    }
-
-    // dir is in baseDir subtree.
-    return readConfs(splitPath
-        .reduce((prev, elem, ix) => prev.concat(Node.path.join(prev[ix], elem)),
-                ["."]),
-            oldConf);
+    // pathOrConf is a configuration object
+    return Array.isArray(pathname)
+        ? pathname  // array
+            .reduce((prom, path) => prom.then(readConf.bind(undefined, path)),
+                    Promise.resolve(pathOrConf))
+        : readFile(pathname, "utf8")
+            .catch(function (err) {
+                if (err.code === "EISDIR") {
+                    return readFile(Node.path.join(pathname, confFile), "utf8");
+                }
+                throw err;
+            })
+            .then(parseConfigurations.bind(undefined, pathOrConf))
+            .catch(function (err) {
+                if (err.code === "ENOENT") {
+                    return pathOrConf;
+                }
+                throw err;
+            });
 }
 
 var P = Object.freeze({
     readConf: readConf,
-    readProjConfs: readProjConfs,
     readFile: readFile
 });
 
@@ -357,7 +364,7 @@ function removeShaBang(str, shaBang) {
 function lintFile(homeConf, file, prevReport) {
     return P.readFile(file, "utf8")
         .then(function (data) {
-            return P.readProjConfs(cwd, Node.path.dirname(file), homeConf)
+            return P.readConf(cwd, Node.path.dirname(file), homeConf)
                 .then(function (conf) {
                     var newConf = Object.assign({}, conf, cmdLineOpts);
                     var report = Node
