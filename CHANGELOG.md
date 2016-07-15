@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.5.0 (2016-07-15)
+
+-   New API functions: `jslintFile()` and `readConf()` (see `README.md`).
+-   Update to JSLint edition 2016-07-13.
+-   Drop Rollup.
+
 ## Version 1.4.4 (2016-06-29)
 
 -   Update to JSLint edition 2016-06-27.
