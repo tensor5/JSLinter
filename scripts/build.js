@@ -1,8 +1,45 @@
+var fs = require("fs");
+
 var inFile = "src/JSLint/jslint.js";
 var outFile = "lib/jslint.js";
-var utils = require("./utils");
-var printDone = utils.printDone;
-var printErrorAndExit = utils.printErrorAndExit;
+
+function printDone(a) {
+    "use strict";
+    console.log("done.");
+    return a;
+}
+
+function printErrorAndExit(err) {
+    "use strict";
+    console.error(err.name + ": " + err.message);
+    process.exit(1);
+}
+
+function readFile(filename, options) {
+    "use strict";
+    return new Promise(function (resolve, reject) {
+        fs.readFile(filename, options, function (err, data) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
+}
+
+function writeFile(filename, data, options) {
+    "use strict";
+    return new Promise(function (resolve, reject) {
+        fs.writeFile(filename, data, options, function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
+    });
+}
 
 function requireJSLintPromise(filename) {
     "use strict";
@@ -85,20 +122,20 @@ function diffPromise(file1, file2) {
 process.stdout.write("Generating '" + outFile +
         "' from original '" + inFile + "'... ");
 
-utils.readFile(inFile, "utf8")
+readFile(inFile, "utf8")
     .then(patchModuleExports)
     .then(patchNode)
-    .then(utils.writeFile.bind(undefined, outFile))
+    .then(writeFile.bind(undefined, outFile))
     .then(function () {
         "use strict";
         return Promise.all([
             requireJSLintPromise("../" + outFile),
-            utils.readFile(inFile, "utf8"),
-            utils.readFile(outFile, "utf8")
+            readFile(inFile, "utf8"),
+            readFile(outFile, "utf8")
         ]);
     })
     .then(patchProperty)
-    .then(utils.writeFile.bind(undefined, outFile))
+    .then(writeFile.bind(undefined, outFile))
     .then(printDone)
     .then(function () {
         "use strict";

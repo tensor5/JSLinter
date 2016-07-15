@@ -19,14 +19,10 @@
   "bin": {
     "jslint": "jslint"
   },
-  "devDependencies": {
-    "rollup": ">=0.25 <0.27"
-  },
   "scripts": {
-    "build-bin": "node scripts/buildBin.js",
-    "build-lib": "node scripts/buildLib.js",
+    "build": "node scripts/build.js",
     "pull-jslint": "git submodule foreach git pull origin master",
-    "sync": "npm run pull-jslint && npm run build-lib",
-    "test": "./jslint index.js lib/*.js scripts/*.js src/*.js"
+    "sync": "npm run pull-jslint && npm run build",
+    "test": "./jslint --sha-bang index.js jslint lib/*.js scripts/*.js"
   }
 }

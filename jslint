@@ -92,21 +92,6 @@ function displayErrors(path, data) {
     }
 }
 
-var optErr = {
-    notBool: function notBool(key) {
-        throw new Error("'" + key + "' must have a Boolean value.");
-    },
-    notKnown: function notKnown(key) {
-        throw new Error("Unexpected option: '" + key + "'.");
-    },
-    notNum: function notNum(key) {
-        throw new Error("'" + key + "' must have a numeric value.");
-    },
-    unexpectedValue: function unexpectedValue(key) {
-        throw new Error("'" + key + "' does not expect a value.");
-    }
-};
-
 function parseCommandLineArgs(argv) {
     var key;
     var match;
@@ -149,14 +134,14 @@ function parseCommandLineArgs(argv) {
                         conf.options[key] = false;
                         break;
                     default:
-                        optErr.notBool(key);
+                        throw new Error("'" + key + "' must have a Boolean value.");
                     }
                     return conf;
                 case "maxerr":
                 case "maxlen":
                     num = Number.parseInt(value);
                     if (Number.isNaN(num)) {
-                        optErr.notNum(key);
+                        throw new Error("'" + key + "' must have a numeric value.");
                     }
                     conf.options[key] = num;
                     return conf;
@@ -164,12 +149,12 @@ function parseCommandLineArgs(argv) {
                 case "sha-bang":
                 case "version":
                     if (value !== undefined) {
-                        optErr.unexpectedValue(key);
+                        throw new Error("'" + key + "' does not expect a value.");
                     }
                     conf.flags[key] = true;
                     return conf;
                 default:
-                    optErr.notKnown(key);
+                    throw new Error("Unexpected option: '" + key + "'.");
                 }
             }
         }
