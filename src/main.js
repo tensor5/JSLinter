@@ -1,12 +1,10 @@
 import displayErrors from "displayErrors";
 import parseCommandLineArgs from "parseCommandLineArgs";
-import P from "promises";
-import Node from "requires";
 
-var cwd = process.cwd();
+
+const {jslintEdition, jslintFile} = require("./index");
 var flags;
 var filePaths;
-var homeDir;
 var cmdLineOpts;
 var parsedArgs;
 
@@ -30,66 +28,38 @@ if (flags.version) {
     if (flags.raw) {
         process.stdout.write(JSON.stringify({
             version: version,
-            jslintEdition: Node.jslintEdition
+            jslintEdition: jslintEdition
         }));
     } else {
         console.log("jslint (JSLinter) %s (JSLint edition %s)",
-                version, Node.jslintEdition);
+                version, jslintEdition);
         console.log("Copyright (c) 2015-2016 Nicola Squartini");
     }
     process.exit(0);
-}
-
-if (process.platform !== "win32") {
-    homeDir = process.env.HOME;
-} else {
-    homeDir = process.env.USERPROFILE;
 }
 
 if (filePaths.length === 0) {
     printErrorAndExit("No files specified.");
 }
 
-function removeShaBang(str, shaBang) {
-    if (shaBang) {
-        return str.replace(/^#!.*(\n|\r\n?)/, "");
-    }
-    return str;
-}
-
-function lintFile(homeConf, file, prevReport) {
-    return P.readFile(file, "utf8")
-        .then(function (data) {
-            return P.readConf(cwd, Node.path.dirname(file), homeConf)
-                .then(function (conf) {
-                    var newConf = Object.assign({}, conf, cmdLineOpts);
-                    var report = Node
-                        .jslint(removeShaBang(data, flags["sha-bang"]),
-                                newConf);
-
-                    if (flags.raw) {
-                        return prevReport.concat({
-                            file: file,
-                            option: report.option,
-                            stop: report.stop,
-                            warnings: report.warnings
-                        });
-                    }
-                    displayErrors(file, report);
-                });
-        });
-}
-
-P.readConf(homeDir, {})
-    .then(function (conf) {
-        var promise = filePaths.reduce(function (prom, file) {
-            return prom.then(lintFile.bind(undefined, conf, file));
-        }, Promise.resolve([]));
-        if (flags.raw) {
-            return promise.then(function (out) {
-                process.stdout.write(JSON.stringify(out));
-            });
+jslintFile(filePaths, {
+    callback: flags.raw
+        ? function ({pathname, report}) {
+            return {
+                file: pathname,
+                option: report.option,
+                stop: report.stop,
+                warnings: report.warnings
+            };
         }
-        return promise;
-    })
-    .catch(printErrorAndExit);
+        : function ({pathname, report}) {
+            displayErrors(pathname, report);
+        },
+    options: cmdLineOpts,
+    shaBang: flags["sha-bang"]
+}).then(function (out) {
+    if (flags.raw) {
+        process.stdout.write(JSON.stringify(out));
+
+    }
+}).catch(printErrorAndExit);

@@ -29,14 +29,16 @@ module, we believe that **JSLinter** has a number of advantages:
 ## JavaScript API
 
 ```javascript
-var jslint = require('jslinter').jslint;
-
-result = jslint(source, options, globals);
+const JSLinter = require('jslinter');
 ```
 
-The `jslint` object imported above is the function described
-[here][jslint-func]. `require('jslinter').jslintEdition` is the edition (a date
-string) of JSLint used internally.
+`JSLinter` is the top-level object; its members are described below.
+
+```javascript
+JSLinter.jslint(source, options, globals);
+```
+
+This is the function described [here][jslint-func].
 
 The `source` parameter is the JavaScript code that you want to check, and it can
 be provided in the form of a string or an array of strings, one for each line of
@@ -66,8 +68,75 @@ program.
 
 The `options` and `globals` parameter are both optional.
 
-`result` is an object representing the result of the analysis, and it's
+`jslint` returns an object representing the result of the analysis, and it's
 described in details [here][jslint-func].
+
+```javascript
+JSLinter.jslintEdition
+```
+
+is the edition (a date string) of JSLint used internally.
+
+```javascript
+JSLinter.jslintFile(files, extraArgs)
+```
+
+It returns the `Promise` of sequentially reading files specified in the `files`
+array and returning an array of JSLint reports for those files. If `files` is a
+string instead of an array, a single file is read and a single report is
+returned. For options `jslintFile` reads the `.jslintrc` file in the user's home
+directory, plus for each file it reads all `.jslintrc` found along the way from
+the `projectDir` (see description below) to the current file being analyzed
+(this behaviour is the third form of `readConf` described below). The format of
+the the objects returned by `jslintFile` depends on the `callback` option
+described below.
+
+`extraArgs` is an object with the following members:
+
+-   `callback`: an optional `Promise` to run after after each file in the array.
+    The argument of the callback is an object with two properties:
+
+    -   `pathname`: the pathname of the file analyzed
+    -   `report`: the JSLint report.
+
+    The return value of the callback is used to produce the output of
+    `jslintFile`. If this option is omitted, the identity function is used.
+
+-   `globals`: the `globals` argument passed to `jslint`.
+
+-   `options`: the `options` argument passed to `jslint`. These options have
+    priority over all other configurations found in `.jslintrc` files.
+
+-   `projectDir`: the root directory of the project, where the top-level
+    `.jslintrc` configuration file is located. If omitted, the current working
+    directory is used.
+
+-   `shaBang`: remove the initial sha-bang (e.g. `#!/usr/bin/env node`) before
+    feeding the file to `jslint`.
+
+```javascript
+JSLinter.readConf(pathname, oldConf)
+
+JSLinter.readConf([path1, path2, ..., pathN], oldConf)
+
+JSLinter.readConf(projectDir, subpath, oldConf)
+```
+
+It returns the `Promise` of reading configuration files and returning an option
+object that updates the `oldConf`. There are three forms of `readConf`. The
+first one just reads one single file. The second reads a list of configuration
+files sequentially and update the configuration object each time:
+
+```javascript
+readConf([path1, path2, path3], oldConf) === readConf(path3, readConf(path2, readConf(path1, oldConf)))
+```
+
+The third form reads all the configuration files that it finds on the way from
+`projectDir` to `subpath` and update the configuration object each time:
+
+```javascript
+readConf("/a/b", "/a/b/c/d", oldConf) === readConf("/a/b/c/d", readConf("/a/b/c", readConf("/a/b", oldConf)))
+```
 
 ## Command-line
 

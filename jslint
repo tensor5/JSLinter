@@ -187,130 +187,9 @@ function parseCommandLineArgs(argv) {
     });
 }
 
-function parseConfigurations(oldConfObj, str) {
-    var newConfObj = JSON.parse(str);
-
-    Object.keys(newConfObj).forEach(function isValidOption(key) {
-        switch (key) {
-        case "bitwise":
-        case "browser":
-        case "couch":
-        case "devel":
-        case "es6":
-        case "eval":
-        case "for":
-        case "fudge":
-        case "multivar":
-        case "node":
-        case "single":
-        case "this":
-        case "white":
-            if (typeof newConfObj[key] !== "boolean") {
-                optErr.notBool(key);
-            }
-            break;
-        case "maxerr":
-        case "maxlen":
-            if (typeof newConfObj[key] !== "number") {
-                optErr.notNum(key);
-            }
-            break;
-        default:
-            optErr.notKnown(key);
-        }
-    });
-
-    if (oldConfObj && typeof oldConfObj === "object") {
-        return Object.assign({}, oldConfObj, newConfObj);
-    }
-
-    return newConfObj;
-}
-
-var Node = Object.freeze({
-    fs: require("fs"),
-    jslint: require("./index").jslint,
-    jslintEdition: require("./index").jslintEdition,
-    path: require("path")
-});
-
-var confFile = ".jslintrc";
-
-function readFile(filename, options) {
-    return new Promise(function (resolve, reject) {
-        Node.fs.readFile(filename, options, function (err, data) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(data);
-            }
-        });
-    });
-}
-
-// 1. readConf(pathname, oldConf)
-//
-//   Promise to read "pathname" and use it to update oldConf.
-//   If "pathname" is a directory, read "pathname/.jslintrc" instead.
-//
-// 2. readConf([path1, path2, path3], oldConf)
-//
-//   Same as readConf(path3, readConf(path2, readConf(path1, oldConf)))
-//
-// 3. readConf("/a/b", "/a/b/c/d", oldConf)
-//
-//   Same as readConf("/a/b/c/d", readConf("/a/b/c", readConf("/a/b", oldConf)))
-function readConf(pathname, pathOrConf, conf) {
-    if (typeof pathOrConf === "string") {  // pathOrConf is a path
-        var splitPath = Node
-            .path.relative(pathname, pathOrConf).split(Node.path.sep);
-
-        // pathOrConf is not in pathname subtree.
-        if (splitPath[0] === "..") {
-            return Promise.resolve(conf);
-        }
-
-        // pathname is the same as pathOrConf.
-        if (splitPath[0] === "") {
-            return readConf(pathname, conf);
-        }
-
-        // pathOrConf is in pathname subtree.
-        return readConf(splitPath.reduce((prev, elem, ix) => prev
-            .concat(Node.path.join(prev[ix], elem)), ["."]),
-                conf);
-    }
-
-    // pathOrConf is a configuration object
-    return Array.isArray(pathname)
-        ? pathname  // array
-            .reduce((prom, path) => prom.then(readConf.bind(undefined, path)),
-                    Promise.resolve(pathOrConf))
-        : readFile(pathname, "utf8")
-            .catch(function (err) {
-                if (err.code === "EISDIR") {
-                    return readFile(Node.path.join(pathname, confFile), "utf8");
-                }
-                throw err;
-            })
-            .then(parseConfigurations.bind(undefined, pathOrConf))
-            .catch(function (err) {
-                if (err.code === "ENOENT") {
-                    return pathOrConf;
-                }
-                throw err;
-            });
-}
-
-var P = Object.freeze({
-    readConf: readConf,
-    readFile: readFile
-});
-
-var cwd = process.cwd();
+const {jslintEdition, jslintFile} = require("./index");
 var flags;
 var filePaths;
-var homeDir;
 var cmdLineOpts;
 var parsedArgs;
 
@@ -334,66 +213,38 @@ if (flags.version) {
     if (flags.raw) {
         process.stdout.write(JSON.stringify({
             version: version,
-            jslintEdition: Node.jslintEdition
+            jslintEdition: jslintEdition
         }));
     } else {
         console.log("jslint (JSLinter) %s (JSLint edition %s)",
-                version, Node.jslintEdition);
+                version, jslintEdition);
         console.log("Copyright (c) 2015-2016 Nicola Squartini");
     }
     process.exit(0);
-}
-
-if (process.platform !== "win32") {
-    homeDir = process.env.HOME;
-} else {
-    homeDir = process.env.USERPROFILE;
 }
 
 if (filePaths.length === 0) {
     printErrorAndExit("No files specified.");
 }
 
-function removeShaBang(str, shaBang) {
-    if (shaBang) {
-        return str.replace(/^#!.*(\n|\r\n?)/, "");
-    }
-    return str;
-}
-
-function lintFile(homeConf, file, prevReport) {
-    return P.readFile(file, "utf8")
-        .then(function (data) {
-            return P.readConf(cwd, Node.path.dirname(file), homeConf)
-                .then(function (conf) {
-                    var newConf = Object.assign({}, conf, cmdLineOpts);
-                    var report = Node
-                        .jslint(removeShaBang(data, flags["sha-bang"]),
-                                newConf);
-
-                    if (flags.raw) {
-                        return prevReport.concat({
-                            file: file,
-                            option: report.option,
-                            stop: report.stop,
-                            warnings: report.warnings
-                        });
-                    }
-                    displayErrors(file, report);
-                });
-        });
-}
-
-P.readConf(homeDir, {})
-    .then(function (conf) {
-        var promise = filePaths.reduce(function (prom, file) {
-            return prom.then(lintFile.bind(undefined, conf, file));
-        }, Promise.resolve([]));
-        if (flags.raw) {
-            return promise.then(function (out) {
-                process.stdout.write(JSON.stringify(out));
-            });
+jslintFile(filePaths, {
+    callback: flags.raw
+        ? function ({pathname, report}) {
+            return {
+                file: pathname,
+                option: report.option,
+                stop: report.stop,
+                warnings: report.warnings
+            };
         }
-        return promise;
-    })
-    .catch(printErrorAndExit);
+        : function ({pathname, report}) {
+            displayErrors(pathname, report);
+        },
+    options: cmdLineOpts,
+    shaBang: flags["sha-bang"]
+}).then(function (out) {
+    if (flags.raw) {
+        process.stdout.write(JSON.stringify(out));
+
+    }
+}).catch(printErrorAndExit);
