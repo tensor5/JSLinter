@@ -149,13 +149,18 @@ function jslintFile(file, extraArgs) {
             }
             return readFile(file, "utf8")
                 .then(function (data) {
-                    const opts = (typeof extraArgs === "object" && extraArgs !== null)
+                    const opts = (typeof extraArgs === "object" &&
+                            extraArgs !== null)
                         ? extraArgs
                         : {};
                     const projectDir = opts.projectDir || process.cwd();
                     return readConf(projectDir, path.dirname(file), homeConf)
                         .then(function (conf) {
-                            const newConf = Object.assign({}, conf, opts.options);
+                            const newConf = Object.assign(
+                                {},
+                                conf,
+                                opts.options
+                            );
                             const report = {
                                 pathname: file,
                                 report: jslint(opts.shaBang

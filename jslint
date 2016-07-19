@@ -18,12 +18,14 @@ function highlightCol(str, i) {
     if (code >= 0xD800 && code <= 0xDBFF) {
         const codeAfter = str.charCodeAt(i + 1);
         if (codeAfter >= 0xDC00 && codeAfter <= 0xDFFF) {
-            return str.slice(0, i) + highlight(c + str.charAt(i + 1)) + str.slice(i + 2);
+            return str.slice(0, i) + highlight(c + str.charAt(i + 1)) +
+                    str.slice(i + 2);
         }
     } else if (code >= 0xDC00 && code <= 0xDFFF && i !== 0) {
         const codeBefore = str.charCodeAt(i - 1);
         if (codeBefore >= 0xD800 && codeBefore <= 0xDBFF) {
-            return str.slice(0, i - 1) + highlight(str.charAt(i - 1) + c) + str.slice(i + 1);
+            return str.slice(0, i - 1) + highlight(str.charAt(i - 1) + c) +
+                    str.slice(i + 1);
         }
     }
     return str.slice(0, i) + highlight(c) + str.slice(i + 1);
@@ -62,9 +64,14 @@ function displayErrors(path, data) {
                 console.log(" ", message, unable);
             } else {
                 const messageCol = warning.column;
-                const messageColHi = highlightCol(data.lines[warning.line], messageCol);
+                const messageColHi = highlightCol(
+                    data.lines[warning.line],
+                    messageCol
+                );
                 const messageLine = warning.line + fudge;
-                const messageLineHi = highlight(paddedNumber(maxLineDigits, messageLine));
+                const messageLineHi = highlight(
+                    paddedNumber(maxLineDigits, messageLine)
+                );
                 const messageNum = paddedNumber(tooManyNumberDigits, i + 1);
                 console.log("  #%s %s", messageNum, message);
                 console.log("  %s %s", messageLineHi, messageColHi);
@@ -115,21 +122,27 @@ function parseCommandLineArgs(argv) {
                         conf.options[key] = false;
                         break;
                     default:
-                        throw new Error("'" + key + "' must have a Boolean value.");
+                        throw new Error(
+                            "'" + key + "' must have a Boolean value."
+                        );
                     }
                     return conf;
                 case "maxerr":
                 case "maxlen":
                     conf.options[key] = Number.parseInt(value);
                     if (Number.isNaN(conf.options[key])) {
-                        throw new Error("'" + key + "' must have a numeric value.");
+                        throw new Error(
+                            "'" + key + "' must have a numeric value."
+                        );
                     }
                     return conf;
                 case "raw":
                 case "sha-bang":
                 case "version":
                     if (value !== undefined) {
-                        throw new Error("'" + key + "' does not expect a value.");
+                        throw new Error(
+                            "'" + key + "' does not expect a value."
+                        );
                     }
                     conf.flags[key] = true;
                     return conf;
