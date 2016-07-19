@@ -159,7 +159,7 @@ function jslintFile(file, extraArgs) {
                             const report = {
                                 pathname: file,
                                 report: jslint(opts.shaBang
-                                    ? data.replace(/^#!.*(\n|\r\n?)/, "")
+                                    ? data.replace(/^#!.*(\n|\r\n?)/, "$1")
                                     : data,
                                         newConf, opts.globals)
                             };
