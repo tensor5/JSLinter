@@ -11,38 +11,28 @@ function highlight(str) {
 }
 
 function highlightCol(str, i) {
-    var c = str.charAt(i);
-    var code = str.charCodeAt(i);
-    var codeOther;
-    var before;
-    var middle;
-    var after;
+    const c = str.charAt(i);
+    const code = str.charCodeAt(i);
 
     // Handle non-BMP characters
     if (code >= 0xD800 && code <= 0xDBFF) {
-        codeOther = str.charCodeAt(i + 1);
-        if (codeOther >= 0xDC00 && codeOther <= 0xDFFF) {
-            middle = highlight(c + str.charAt(i + 1));
-            after = str.slice(i + 2);
+        const codeAfter = str.charCodeAt(i + 1);
+        if (codeAfter >= 0xDC00 && codeAfter <= 0xDFFF) {
+            return str.slice(0, i) + highlight(c + str.charAt(i + 1)) + str.slice(i + 2);
         }
     } else if (code >= 0xDC00 && code <= 0xDFFF && i !== 0) {
-        codeOther = str.charCodeAt(i - 1);
-        if (codeOther >= 0xD800 && codeOther <= 0xDBFF) {
-            before = str.slice(0, i - 1);
-            middle = highlight(str.charAt(i - 1) + c);
+        const codeBefore = str.charCodeAt(i - 1);
+        if (codeBefore >= 0xD800 && codeBefore <= 0xDBFF) {
+            return str.slice(0, i - 1) + highlight(str.charAt(i - 1) + c) + str.slice(i + 1);
         }
     }
-
-    before = before || str.slice(0, i);
-    middle = middle || highlight(c);
-    after = after || str.slice(i + 1);
-    return before + middle + after;
+    return str.slice(0, i) + highlight(c) + str.slice(i + 1);
 }
 
 function paddedNumber(totalSpace, number) {
-    var digitString = number.toString();
-    var padding = totalSpace - digitString.length;
-    var space = " ";
+    const digitString = number.toString();
+    const padding = totalSpace - digitString.length;
+    const space = " ";
 
     if (padding >= 0) {
         return space.repeat(padding) + digitString;
@@ -52,53 +42,43 @@ function paddedNumber(totalSpace, number) {
 }
 
 function displayErrors(path, data) {
-    var fudge = +!!data.option.fudge;
-    var maxLine;
-    var maxLineDigits;
-    var maxerr = data.option.maxerr;
-    var numberOfWarnings = data.warnings.length;
-    var tooMany = numberOfWarnings >= maxerr;
-    var tooManyNumber = numberOfWarnings - tooMany;
-    var tooManyNumberDigits = tooManyNumber.toString().length;
-    var unable = "JSLint was unable to finish.";
+    const fudge = +!!data.option.fudge;
+    const maxerr = data.option.maxerr;
+    const numberOfWarnings = data.warnings.length;
+    const tooMany = numberOfWarnings >= maxerr;
+    const tooManyNumber = numberOfWarnings - tooMany;
+    const tooManyNumberDigits = tooManyNumber.toString().length;
+    const unable = "JSLint was unable to finish.";
 
     if (numberOfWarnings !== 0) {
         console.log("\n%s", path);
-        maxLine = data.warnings[numberOfWarnings - 1].line + fudge;
-        maxLineDigits = maxLine.toString().length;
-    }
-    data.warnings.forEach(function (warning, i) {
-        var message = warning.message;
-        var messageCol;
-        var messageColHi;
-        var messageLine;
-        var messageLineHi;
-        var messageNum;
+        const maxLine = data.warnings[numberOfWarnings - 1].line + fudge;
+        const maxLineDigits = maxLine.toString().length;
 
-        if (i === maxerr && data.stop) {
-            console.log(" ", message, unable);
-        } else {
-            messageCol = warning.column;
-            messageColHi = highlightCol(data.lines[warning.line], messageCol);
-            messageLine = warning.line + fudge;
-            messageLineHi = highlight(paddedNumber(maxLineDigits, messageLine));
-            messageNum = paddedNumber(tooManyNumberDigits, i + 1);
-            console.log("  #%s %s", messageNum, message);
-            console.log("  %s %s", messageLineHi, messageColHi);
-        }
-    });
+        data.warnings.forEach(function (warning, i) {
+            const message = warning.message;
+
+            if (i === maxerr && data.stop) {
+                console.log(" ", message, unable);
+            } else {
+                const messageCol = warning.column;
+                const messageColHi = highlightCol(data.lines[warning.line], messageCol);
+                const messageLine = warning.line + fudge;
+                const messageLineHi = highlight(paddedNumber(maxLineDigits, messageLine));
+                const messageNum = paddedNumber(tooManyNumberDigits, i + 1);
+                console.log("  #%s %s", messageNum, message);
+                console.log("  %s %s", messageLineHi, messageColHi);
+            }
+        });
+    }
     if (data.stop && !tooMany) {
         console.log(" ", unable);
     }
 }
 
 function parseCommandLineArgs(argv) {
-    var key;
-    var match;
     var notStop = true;
-    var num;
-    var optRegEx = /^--([^\s=]+)(?:=(\S*))?$/;
-    var value;
+    const optRegEx = /^--([^\s=]+)(?:=(\S*))?$/;
 
     return argv.reduce(function (conf, arg) {
         if (notStop) {
@@ -107,10 +87,11 @@ function parseCommandLineArgs(argv) {
                 return conf;
             }
 
-            match = arg.match(optRegEx);
+            const match = arg.match(optRegEx);
             if (match) {
-                key = match[1];
-                value = match[2];
+                const key = match[1];
+                const value = match[2];
+
                 switch (key) {
                 case "bitwise":
                 case "browser":
@@ -139,11 +120,10 @@ function parseCommandLineArgs(argv) {
                     return conf;
                 case "maxerr":
                 case "maxlen":
-                    num = Number.parseInt(value);
-                    if (Number.isNaN(num)) {
+                    conf.options[key] = Number.parseInt(value);
+                    if (Number.isNaN(conf.options[key])) {
                         throw new Error("'" + key + "' must have a numeric value.");
                     }
-                    conf.options[key] = num;
                     return conf;
                 case "raw":
                 case "sha-bang":

@@ -18,7 +18,7 @@ const path = require("path");
 const jslint = require("./lib/jslint");
 
 function parseConfigurations(oldConfObj, str) {
-    var newConfObj = JSON.parse(str);
+    const newConfObj = JSON.parse(str);
 
     Object.keys(newConfObj).forEach(function isValidOption(key) {
         switch (key) {
@@ -85,7 +85,7 @@ function readFile(filename, options) {
 //   Same as readConf("/a/b/c/d", readConf("/a/b/c", readConf("/a/b", oldConf)))
 function readConf(pathname, pathOrConf, conf) {
     if (typeof pathOrConf === "string") {  // pathOrConf is a path
-        var splitPath = path.relative(pathname, pathOrConf).split(path.sep);
+        const splitPath = path.relative(pathname, pathOrConf).split(path.sep);
 
         // pathOrConf is not in pathname subtree.
         if (splitPath[0] === "..") {
