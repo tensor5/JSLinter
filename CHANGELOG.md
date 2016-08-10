@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 1.5.1 (2016-08-10)
+
+-   Preserve correct line numbers in JSLint report when file starts with `#!`.
+-   Update to JSLint edition 2016-08-09.
+
 ## Version 1.5.0 (2016-07-15)
 
 -   New API functions: `jslintFile()` and `readConf()` (see `README.md`).
