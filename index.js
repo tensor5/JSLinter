@@ -6,8 +6,8 @@
     HOME, USERPROFILE, assign, bind, callback, catch, code, concat, cwd,
     dirname, edition, env, exports, forEach, freeze, globals, isArray, join,
     jslint, jslintEdition, jslintFile, keys, options, parse, pathname,
-    platform, projectDir, readConf, readFile, reduce, relative, replace,
-    report, resolve, sep, shaBang, split, then
+    platform, projectDir, readConf, readFile, reduce, relative, report,
+    resolve, sep, shaBang, slice, split, startsWith, then
 */
 
 "use strict";
@@ -161,12 +161,17 @@ function jslintFile(file, extraArgs) {
                                 conf,
                                 opts.options
                             );
+                            const lines = Array.isArray(data)
+                                ? data
+                                : data.split(/\n|\r\n?/);
+                            const sb = opts.shaBang
+                                ? lines[0].startsWith("#!")
+                                    ? [""].concat(lines.slice(1))
+                                    : lines
+                                : lines;
                             const report = {
                                 pathname: file,
-                                report: jslint(opts.shaBang
-                                    ? data.replace(/^#!.*(\n|\r\n?)/, "$1")
-                                    : data,
-                                        newConf, opts.globals)
+                                report: jslint(sb, newConf, opts.globals)
                             };
 
                             return typeof opts.callback === "function"
