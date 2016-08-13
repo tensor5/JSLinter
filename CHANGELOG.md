@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.5.2 (2016-08-13)
+
+-   Update to JSLint edition 2016-08-12.
+
 ## Version 1.5.1 (2016-08-10)
 
 -   Preserve correct line numbers in JSLint report when file starts with `#!`.
