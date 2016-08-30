@@ -7,7 +7,8 @@
 "use strict";
 
 function highlight(str) {
-    return "\x1B[7m" + str + "\x1B[27m";
+    return String.fromCharCode(27) + "[7m" + str +
+            String.fromCharCode(27) + "[27m";
 }
 
 function highlightCol(str, i) {
