@@ -98,16 +98,21 @@ function readConf(pathname, pathOrConf, conf) {
         }
 
         // pathOrConf is in pathname subtree.
-        return readConf(splitPath.reduce((prev, elem, ix) => prev
-            .concat(path.join(prev[ix], elem)), [pathname]),
-                conf);
+        return readConf(
+            splitPath.reduce(
+                (prev, elem, ix) => prev.concat(path.join(prev[ix], elem)),
+                [pathname]
+            ),
+            conf
+        );
     }
 
     // pathOrConf is a configuration object
     return Array.isArray(pathname)
-        ? pathname  // array
-            .reduce((prom, path) => prom.then(readConf.bind(undefined, path)),
-                    Promise.resolve(pathOrConf))
+        ? pathname.reduce(  // array
+            (prom, path) => prom.then(readConf.bind(undefined, path)),
+            Promise.resolve(pathOrConf)
+        )
         : readFile(pathname, "utf8")
             .catch(function (err) {
                 if (err.code === "EISDIR") {
@@ -149,8 +154,9 @@ function jslintFile(file, extraArgs) {
             }
             return readFile(file, "utf8")
                 .then(function (data) {
-                    const opts = (typeof extraArgs === "object" &&
-                            extraArgs !== null)
+                    const opts = (
+                        typeof extraArgs === "object" && extraArgs !== null
+                    )
                         ? extraArgs
                         : {};
                     const projectDir = opts.projectDir || process.cwd();

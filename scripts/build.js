@@ -78,8 +78,10 @@ function propertyDirective(data) {
             if (i === 0) {
                 directive.push(key);
                 lineLength += key.length;
-            } else if (lineLength + key.length + 3 <= maxLen ||
-                    (lineLength + key.length + 2 === maxLen && i === last)) {
+            } else if (
+                lineLength + key.length + 3 <= maxLen ||
+                (lineLength + key.length + 2 === maxLen && i === last)
+            ) {
                 directive.push(", ", key);
                 lineLength += 2 + key.length;
             } else {
@@ -99,8 +101,10 @@ function propertyDirective(data) {
 // arr[2]: patched source
 function patchProperty(arr) {
     "use strict";
-    return arr[2].replace(/\n\/\*property[^*]*\*\/\n/,
-            "\n" + propertyDirective(arr[0](arr[2])));
+    return arr[2].replace(
+        /\n\/\*property[^*]*\*\/\n/,
+        "\n" + propertyDirective(arr[0](arr[2]))
+    );
 }
 
 function diffPromise(file1, file2) {
@@ -119,8 +123,9 @@ function diffPromise(file1, file2) {
     });
 }
 
-process.stdout.write("Generating '" + outFile +
-        "' from original '" + inFile + "'... ");
+process.stdout.write(
+    "Generating '" + outFile + "' from original '" + inFile + "'... "
+);
 
 readFile(inFile, "utf8")
     .then(patchModuleExports)

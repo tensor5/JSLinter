@@ -195,8 +195,11 @@ if (flags.version) {
             jslintEdition: jslintEdition
         }));
     } else {
-        console.log("jslint (JSLinter) %s (JSLint edition %s)",
-                version, jslintEdition);
+        console.log(
+            "jslint (JSLinter) %s (JSLint edition %s)",
+            version,
+            jslintEdition
+        );
         console.log("Copyright (c) 2015-2017 Nicola Squartini");
     }
     process.exit(0);
