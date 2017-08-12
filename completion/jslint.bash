@@ -13,6 +13,7 @@ _jslint()
         eval
         for
         fudge
+        getset
         multivar
         node
         single
