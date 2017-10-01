@@ -60,8 +60,7 @@ function patchModuleExports(str) {
 function patchNode(str) {
     "use strict";
     return str
-        .replace("\n/*jslint bitwise*/\n", "\n/*jslint bitwise node*/\n")
-        .replace("\n\n/*node module.exports = jslint;*/", "");
+        .replace("\n/*jslint bitwise*/\n", "\n/*jslint bitwise node*/\n");
 }
 
 function propertyDirective(data) {
