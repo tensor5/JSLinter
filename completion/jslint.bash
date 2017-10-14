@@ -9,7 +9,6 @@ _jslint()
         browser
         couch
         devel
-        es6
         eval
         for
         fudge

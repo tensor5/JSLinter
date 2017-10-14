@@ -105,7 +105,6 @@ function parseCommandLineArgs(argv) {
                 case "browser":
                 case "couch":
                 case "devel":
-                case "es6":
                 case "eval":
                 case "for":
                 case "fudge":
