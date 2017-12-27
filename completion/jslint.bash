@@ -7,6 +7,7 @@ _jslint()
     bool_opts=(
         bitwise
         browser
+        convert
         couch
         devel
         eval

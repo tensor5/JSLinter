@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*jslint
-    es6, node
+    node
 */
 
 "use strict";
@@ -45,7 +45,7 @@ function paddedNumber(totalSpace, number) {
 }
 
 function displayErrors(path, data) {
-    const fudge = +!!data.option.fudge;
+    const fudge = Number(Boolean(data.option.fudge));
     const maxerr = data.option.maxerr;
     const numberOfWarnings = data.warnings.length;
     const tooMany = numberOfWarnings >= maxerr;
@@ -103,6 +103,7 @@ function parseCommandLineArgs(argv) {
                 switch (key) {
                 case "bitwise":
                 case "browser":
+                case "convert":
                 case "couch":
                 case "devel":
                 case "eval":

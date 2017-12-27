@@ -1,5 +1,5 @@
 /*jslint
-    es6, node
+    node
 */
 
 /*property
