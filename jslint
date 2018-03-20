@@ -212,8 +212,7 @@ if (filePaths.length === 0) {
 
 jslintFile(filePaths, {
     callback: flags.raw
-        ? function (file) {
-            const {pathname, report} = file;
+        ? function ({pathname, report}) {
             return {
                 file: pathname,
                 option: report.option,
@@ -221,8 +220,7 @@ jslintFile(filePaths, {
                 warnings: report.warnings
             };
         }
-        : function (file) {
-            const {pathname, report} = file;
+        : function ({pathname, report}) {
             displayErrors(pathname, report);
         },
     options: cmdLineOpts,
