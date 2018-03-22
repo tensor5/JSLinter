@@ -1,5 +1,9 @@
 # Changelog
 
+## Vervion 1.5.42 (2018-03-22)
+
+-   Update to JSLint edition 2018-03-21.
+
 ## Version 1.5.41 (2018-03-20)
 
 -   Update to JSLint edition 2018-03-14.
