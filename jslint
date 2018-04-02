@@ -201,7 +201,7 @@ if (flags.version) {
             version,
             jslintEdition
         );
-        console.log("Copyright (c) 2015-2017 Nicola Squartini");
+        console.log("Copyright (c) 2015-2018 Nicola Squartini");
     }
     process.exit(0);
 }
